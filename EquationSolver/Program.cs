@@ -10,6 +10,14 @@ namespace EquationSolver
     {
         static void Main(string[] args)
         {
+            string text = GetInputString();
+            Console.ReadLine();
+        }
+
+        private static string GetInputString()
+        {
+            Console.Write("Term: ");
+            return Console.ReadLine();
         }
     }
 }
