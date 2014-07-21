@@ -18,6 +18,7 @@ namespace EquationSolver
                 TermParser parser = new TermParser(text);
                 parser.Parse();
                 elements = parser.Elements;
+                parser.TopLayer.Calculate(null);
             }
             catch (ParseStringException e)
             {

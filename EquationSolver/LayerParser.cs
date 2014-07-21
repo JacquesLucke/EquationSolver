@@ -38,7 +38,17 @@ namespace EquationSolver
 
                 while(els.Count > 0)
                 {
-                    AddToLayerAndDeleteFromList((AddSubtractLayer)topLayer, els);
+                    AddFirstToLayerAndDeleteFromList((AddSubtractLayer)topLayer, els);
+                }
+            }
+            if(topLayerType == typeof(MultiplyDivideLayer))
+            {
+                topLayer = new MultiplyDivideLayer();
+                List<IElement> els = new List<IElement>(elements);
+
+                while (els.Count > 0)
+                {
+                    AddFirstToLayerAndDeleteFromList((MultiplyDivideLayer)topLayer, els);
                 }
             }
         }
@@ -65,7 +75,7 @@ namespace EquationSolver
             throw new CouldNotFindTopLevelLayerType();
         }
 
-        private void AddToLayerAndDeleteFromList(AddSubtractLayer layer, List<IElement> els)
+        private void AddFirstToLayerAndDeleteFromList(AddSubtractLayer layer, List<IElement> els)
         {
             bool isAddition = true;
             if (els[0] is MinusElement) isAddition = false;
@@ -82,6 +92,26 @@ namespace EquationSolver
             parser.Parse();
             if (isAddition) layer.Additions.Add(parser.TopLayer);
             if (!isAddition) layer.Subtractions.Add(parser.TopLayer);
+
+            els.RemoveRange(0, length);
+        }
+        private void AddFirstToLayerAndDeleteFromList(MultiplyDivideLayer layer, List<IElement> els)
+        {
+            bool isFactor = true;
+            if (els[0] is DivideElement) isFactor = false;
+            if (els[0] is MultiplyElement || els[0] is DivideElement) els.RemoveAt(0);
+
+            int length = 0;
+            foreach (IElement element in els)
+            {
+                if (element is MultiplyElement || element is DivideElement) break;
+                length++;
+            }
+
+            LayerParser parser = new LayerParser(els.GetRange(0, length));
+            parser.Parse();
+            if (isFactor) layer.Factors.Add(parser.TopLayer);
+            if (!isFactor) layer.Divisors.Add(parser.TopLayer);
 
             els.RemoveRange(0, length);
         }

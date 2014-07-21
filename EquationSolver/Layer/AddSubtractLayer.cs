@@ -36,7 +36,7 @@ namespace EquationSolver
             }
             for (int i = 0; i < subtractions.Count; i++)
             {
-                output -= additions[i].Calculate(variableToNumberDictionary);
+                output -= subtractions[i].Calculate(variableToNumberDictionary);
             }
 
             return output;

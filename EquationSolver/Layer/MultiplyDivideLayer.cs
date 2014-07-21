@@ -17,6 +17,15 @@ namespace EquationSolver
             divisors = new List<ILayer>();
         }
 
+        public List<ILayer> Factors
+        {
+            get { return factors; }
+        }
+        public List<ILayer> Divisors
+        {
+            get { return divisors; }
+        }
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             double output = 1;
