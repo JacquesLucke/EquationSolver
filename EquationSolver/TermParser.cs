@@ -70,6 +70,15 @@ namespace EquationSolver
         {
             text = text.Replace('.', ',');
             text = text.Replace(" ", "");
+            while(true)
+            {
+                string newText = text.Replace("++", "+");
+                newText = newText.Replace("--", "+");
+                newText = newText.Replace("+-", "-");
+                newText = newText.Replace("-+", "-");
+                if (newText == text) break;
+                text = newText;
+            }
             return text;
         }
         private IElement FindAndDeleteFirstElement(ref string text)
