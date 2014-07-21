@@ -49,16 +49,17 @@
     <Compile Include="Elements\PowerElement.cs" />
     <Compile Include="Elements\SqrtElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
-    <Compile Include="LayerParser.cs" />
+    <Compile Include="ElementsToLayerParser.cs" />
     <Compile Include="Layer\MultiplyDivideLayer.cs" />
     <Compile Include="Layer\AddSubtractLayer.cs" />
     <Compile Include="Layer\ILayer.cs" />
     <Compile Include="Layer\NumberLayer.cs" />
     <Compile Include="Layer\VariableLayer.cs" />
-    <Compile Include="TermParser.cs" />
+    <Compile Include="StringtoElementsParser.cs" />
     <Compile Include="Elements\PlusElement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringToLayersParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

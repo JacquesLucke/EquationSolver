@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace EquationSolver
 {
-    public class LayerParser
+    public class ElementsToLayersParser
     {
         List<IElement> elements;
         ILayer topLayer;
 
-        public LayerParser(List<IElement> elements)
+        public ElementsToLayersParser(List<IElement> elements)
         {
             this.elements = elements;
         }
@@ -24,33 +24,16 @@ namespace EquationSolver
             Type topLayerType = GetTopLayerType();
 
             if (topLayerType == typeof(NumberLayer))
-            {
-                topLayer = new NumberLayer(((NumberElement)elements[0]).Number);
-            }
-            if(topLayerType == typeof(VariableLayer))
-            {
-                topLayer = new VariableLayer(((VariableElement)elements[0]).Name);
-            }
-            if(topLayerType == typeof(AddSubtractLayer))
-            {
-                topLayer = new AddSubtractLayer();
-                List<IElement> els = new List<IElement>(elements);
+                topLayer = ParseNumberLayerFromElement();
 
-                while(els.Count > 0)
-                {
-                    AddFirstToLayerAndDeleteFromList((AddSubtractLayer)topLayer, els);
-                }
-            }
-            if(topLayerType == typeof(MultiplyDivideLayer))
-            {
-                topLayer = new MultiplyDivideLayer();
-                List<IElement> els = new List<IElement>(elements);
+            if (topLayerType == typeof(VariableLayer))
+                topLayer = ParseVariableLayerFromElement();
 
-                while (els.Count > 0)
-                {
-                    AddFirstToLayerAndDeleteFromList((MultiplyDivideLayer)topLayer, els);
-                }
-            }
+            if (topLayerType == typeof(AddSubtractLayer))
+                topLayer = ParseAddSubtractLayerFromElements();
+
+            if (topLayerType == typeof(MultiplyDivideLayer))
+                topLayer = ParseMultiplyDivideLayerFromElements();
         }
 
         private Type GetTopLayerType()
@@ -75,6 +58,35 @@ namespace EquationSolver
             throw new CouldNotFindTopLevelLayerType();
         }
 
+        private NumberLayer ParseNumberLayerFromElement()
+        {
+            return new NumberLayer(((NumberElement)elements[0]).Number);
+        }
+        private VariableLayer ParseVariableLayerFromElement()
+        {
+            return new VariableLayer(((VariableElement)elements[0]).Name); ;
+        }
+        private AddSubtractLayer ParseAddSubtractLayerFromElements()
+        {
+            AddSubtractLayer layer = new AddSubtractLayer();
+            List<IElement> els = new List<IElement>(elements);
+
+            while (els.Count > 0)
+                AddFirstToLayerAndDeleteFromList(layer, els);
+
+            return layer;
+        }
+        private MultiplyDivideLayer ParseMultiplyDivideLayerFromElements()
+        {
+            MultiplyDivideLayer layer = new MultiplyDivideLayer();
+            List<IElement> els = new List<IElement>(elements);
+
+            while (els.Count > 0)
+                AddFirstToLayerAndDeleteFromList(layer, els);
+
+            return layer;
+        }
+
         private void AddFirstToLayerAndDeleteFromList(AddSubtractLayer layer, List<IElement> els)
         {
             bool isAddition = true;
@@ -82,13 +94,13 @@ namespace EquationSolver
             if (els[0] is PlusElement || els[0] is MinusElement) els.RemoveAt(0);
 
             int length = 0;
-            foreach(IElement element in els)
+            foreach (IElement element in els)
             {
                 if (element is PlusElement || element is MinusElement) break;
                 length++;
             }
 
-            LayerParser parser = new LayerParser(els.GetRange(0, length));
+            ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(0, length));
             parser.Parse();
             if (isAddition) layer.Additions.Add(parser.TopLayer);
             if (!isAddition) layer.Subtractions.Add(parser.TopLayer);
@@ -108,7 +120,7 @@ namespace EquationSolver
                 length++;
             }
 
-            LayerParser parser = new LayerParser(els.GetRange(0, length));
+            ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(0, length));
             parser.Parse();
             if (isFactor) layer.Factors.Add(parser.TopLayer);
             if (!isFactor) layer.Divisors.Add(parser.TopLayer);

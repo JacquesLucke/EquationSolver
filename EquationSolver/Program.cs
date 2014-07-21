@@ -15,16 +15,14 @@ namespace EquationSolver
             List<IElement> elements = new List<IElement>();
             try
             {
-                TermParser parser = new TermParser(text);
+                StringToLayersParser parser = new StringToLayersParser(text);
                 parser.Parse();
-                elements = parser.Elements;
                 Console.WriteLine(parser.TopLayer.Calculate(null));
             }
             catch (ParseStringException e)
             {
                 Console.WriteLine("Couldn't parse that term");
             }
-            Console.ReadLine();
             Console.ReadLine();
         }
 

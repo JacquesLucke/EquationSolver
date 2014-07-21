@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EquationSolver
 {
-    public class TermParser
+    public class StringtoElementsParser
     {
         string original = "";
         List<IElement> elements;
@@ -14,7 +14,7 @@ namespace EquationSolver
         Dictionary<char, Type> charToElementDictionary;
         ILayer topLayer;
 
-        public TermParser(string text)
+        public StringtoElementsParser(string text)
         {
             original = text;
             SetupParseDictionary();
@@ -45,11 +45,6 @@ namespace EquationSolver
         }
 
         public void Parse()
-        {
-            ParseElements();
-            GenerateLayers();
-        }
-        private void ParseElements()
         {
             elements = GetElementsFromString(original);
         }
@@ -131,13 +126,6 @@ namespace EquationSolver
             NumberElement element = new NumberElement(Convert.ToDouble(text.Substring(0, endIndex + 1)));
             text = text.Substring(endIndex + 1);
             return element;
-        }
-
-        public void GenerateLayers()
-        {
-            LayerParser parser = new LayerParser(elements);
-            parser.Parse();
-            topLayer = parser.TopLayer;
         }
     }
 
