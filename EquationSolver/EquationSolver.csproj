@@ -45,6 +45,7 @@
     <Compile Include="MinusElement.cs" />
     <Compile Include="NumberElement.cs" />
     <Compile Include="MultiplyElement.cs" />
+    <Compile Include="DivideElement.cs" />
     <Compile Include="PlusElement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
