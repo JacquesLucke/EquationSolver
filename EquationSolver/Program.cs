@@ -12,9 +12,10 @@ namespace EquationSolver
         static void Main(string[] args)
         {
             string text = GetInputString();
+            List<IElement> elements = new List<IElement>();
             try
             {
-                List<IElement> elements = GetElementsFromString(text);
+                elements = GetElementsFromString(text);
             }
             catch
             {
@@ -48,12 +49,19 @@ namespace EquationSolver
                 NumberElement element = GetAndDeleteFirstNumberElement(ref text);
                 return element;
             }
+
             // single char elements
-            if(text[0] == '+')
+            Dictionary<char, Type> charToElementDictionary = new Dictionary<char, Type>();
+            charToElementDictionary.Add('+', typeof(PlusElement));
+            charToElementDictionary.Add('-', typeof(MinusElement));
+
+            foreach(KeyValuePair<char, Type> pair in charToElementDictionary)
             {
-                PlusElement element = new PlusElement();
-                text = text.Substring(1);
-                return element;
+                if (text[0] == pair.Key)
+                {
+                    text = text.Substring(1);
+                    return (IElement)Activator.CreateInstance(pair.Value);
+                }
             }
             return null;
         }
