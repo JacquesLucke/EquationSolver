@@ -93,12 +93,7 @@ namespace EquationSolver
             if (els[0] is MinusElement) isAddition = false;
             if (els[0] is PlusElement || els[0] is MinusElement) els.RemoveAt(0);
 
-            int length = 0;
-            foreach (IElement element in els)
-            {
-                if (element is PlusElement || element is MinusElement) break;
-                length++;
-            }
+            int length = GetFirstIndexOrCount(els, typeof(PlusElement), typeof(MinusElement));
 
             ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(0, length));
             parser.Parse();
@@ -113,12 +108,7 @@ namespace EquationSolver
             if (els[0] is DivideElement) isFactor = false;
             if (els[0] is MultiplyElement || els[0] is DivideElement) els.RemoveAt(0);
 
-            int length = 0;
-            foreach (IElement element in els)
-            {
-                if (element is MultiplyElement || element is DivideElement) break;
-                length++;
-            }
+            int length = GetFirstIndexOrCount(els, typeof(MultiplyElement), typeof(DivideElement));
 
             ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(0, length));
             parser.Parse();
@@ -126,6 +116,30 @@ namespace EquationSolver
             if (!isFactor) layer.Divisors.Add(parser.TopLayer);
 
             els.RemoveRange(0, length);
+        }
+
+        private int GetFirstIndexOrCount(List<IElement> els, params Type[] search)
+        {
+            int index = els.Count;
+            foreach(Type type in search)
+            {
+                int indexOfElement = GetFirstIndexOfType(els, type);
+                if (indexOfElement != -1) index = Math.Min(index, indexOfElement);
+            }
+            return index;
+        }
+        private int GetFirstIndexOfType(List<IElement> els, Type type)
+        {
+            int index = -1;
+            for(int i = 0; i<els.Count; i++)
+            {
+                if(els[i].GetType() == type)
+                {
+                    index = i;
+                    break;
+                }
+            }
+            return index;
         }
     }
 }
