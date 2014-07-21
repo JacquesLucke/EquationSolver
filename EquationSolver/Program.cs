@@ -61,6 +61,7 @@ namespace EquationSolver
             Dictionary<char, Type> charToElementDictionary = new Dictionary<char, Type>();
             charToElementDictionary.Add('+', typeof(PlusElement));
             charToElementDictionary.Add('-', typeof(MinusElement));
+            charToElementDictionary.Add('*', typeof(MultiplyElement));
 
             foreach(KeyValuePair<char, Type> pair in charToElementDictionary)
             {
