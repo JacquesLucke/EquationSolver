@@ -46,6 +46,7 @@
     <Compile Include="Elements\NumberElement.cs" />
     <Compile Include="Elements\MultiplyElement.cs" />
     <Compile Include="Elements\DivideElement.cs" />
+    <Compile Include="Elements\SqrtElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
     <Compile Include="TermParser.cs" />
     <Compile Include="Elements\PlusElement.cs" />

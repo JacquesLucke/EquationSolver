@@ -19,7 +19,7 @@ namespace EquationSolver
                 parser.Parse();
                 elements = parser.Elements;
             }
-            catch
+            catch (ParseStringException e)
             {
                 Console.WriteLine("Couldn't parse that term");
             }

@@ -10,6 +10,7 @@ namespace EquationSolver
     {
         string original = "";
         List<IElement> elements;
+        Dictionary<string, Type> stringToElementDictionary;
         Dictionary<char, Type> charToElementDictionary;
 
         public TermParser(string text)
@@ -19,6 +20,9 @@ namespace EquationSolver
         }
         private void SetupParseDictionary()
         {
+            stringToElementDictionary = new Dictionary<string, Type>();
+            stringToElementDictionary.Add("sqrt", typeof(SqrtElement));
+
             charToElementDictionary = new Dictionary<char, Type>();
             charToElementDictionary.Add('+', typeof(PlusElement));
             charToElementDictionary.Add('-', typeof(MinusElement));
@@ -68,6 +72,15 @@ namespace EquationSolver
             {
                 NumberElement element = GetAndDeleteFirstNumberElement(ref text);
                 return element;
+            }
+            foreach (KeyValuePair<string, Type> pair in stringToElementDictionary)
+            {
+                if (text.Length < pair.Key.Length) continue;
+                if (text.Substring(0, pair.Key.Length) == pair.Key)
+                {
+                    text = text.Substring(pair.Key.Length);
+                    return (IElement)Activator.CreateInstance(pair.Value);
+                }
             }
 
             // single char elements
