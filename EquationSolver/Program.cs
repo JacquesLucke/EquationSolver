@@ -45,6 +45,7 @@ namespace EquationSolver
         private static string NormalizeString(string text)
         {
             text = text.Replace('.', ',');
+            text = text.Replace(" ", "");
             return text;
         }
         private static IElement FindAndDeleteFirstElement(ref string text)
