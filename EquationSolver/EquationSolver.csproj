@@ -49,6 +49,7 @@
     <Compile Include="Elements\PowerElement.cs" />
     <Compile Include="Elements\SqrtElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
+    <Compile Include="Layer\MultiplyDivideLayer.cs" />
     <Compile Include="Layer\AddSubtractLayer.cs" />
     <Compile Include="Layer\ILayer.cs" />
     <Compile Include="Layer\NumberLayer.cs" />

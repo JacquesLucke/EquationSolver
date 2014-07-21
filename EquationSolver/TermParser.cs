@@ -12,6 +12,7 @@ namespace EquationSolver
         List<IElement> elements;
         Dictionary<string, Type> stringToElementDictionary;
         Dictionary<char, Type> charToElementDictionary;
+        ILayer topLayer;
 
         public TermParser(string text)
         {
@@ -42,6 +43,7 @@ namespace EquationSolver
         public void Parse()
         {
             ParseElements();
+            GenerateLayers();
         }
         private void ParseElements()
         {
@@ -117,9 +119,38 @@ namespace EquationSolver
             text = text.Substring(endIndex + 1);
             return element;
         }
+
+        public void GenerateLayers()
+        {
+            List<IElement> elements = new List<IElement>(this.elements);
+        }
+        private Type GetTopLayerType(List<IElement> elements)
+        {
+            if(elements.Count == 1)
+            {
+                if (elements[0] is NumberElement) return typeof(NumberLayer);
+                if (elements[0] is VariableElement) return typeof(VariableLayer);
+            }
+
+            bool containsPlusOrMinus = false;
+            bool containsMultiplyOrDivide = false;
+            foreach(IElement element in elements)
+            {
+                if (element is PlusElement || element is MinusElement) containsPlusOrMinus = true;
+                if (element is MultiplyElement || element is DivideElement) containsMultiplyOrDivide = true;
+            }
+
+            if (containsPlusOrMinus) return typeof(AddSubtractLayer);
+            if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
+
+            throw new CouldNotFindTopLevelLayerType();
+        }
     }
 
     public class ParseStringException : Exception
+    {
+    }
+    public class CouldNotFindTopLevelLayerType : Exception
     {
     }
 }
