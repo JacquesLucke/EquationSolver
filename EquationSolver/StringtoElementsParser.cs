@@ -29,6 +29,8 @@ namespace EquationSolver
             charToElementDictionary.Add('*', typeof(MultiplyElement));
             charToElementDictionary.Add('/', typeof(DivideElement));
             charToElementDictionary.Add('^', typeof(PowerElement));
+            charToElementDictionary.Add('(', typeof(OpenBracketElement));
+            charToElementDictionary.Add(')', typeof(CloseBracketElement));
         }
 
         public List<IElement> Elements

@@ -21,6 +21,12 @@ namespace EquationSolver
         }
         public void Parse()
         {
+            if (CheckIfInBrackets())
+            {
+                elements.RemoveAt(0);
+                elements.RemoveAt(elements.Count - 1);
+            }
+
             Type topLayerType = GetTopLayerType();
 
             if (topLayerType == typeof(NumberLayer))
@@ -35,7 +41,21 @@ namespace EquationSolver
             if (topLayerType == typeof(MultiplyDivideLayer))
                 topLayer = ParseMultiplyDivideLayerFromElements();
         }
+        private bool CheckIfInBrackets()
+        {
+            int deepness = 0;
+            if (elements[0] is OpenBracketElement) deepness = 1;
+            else return false;
+            for(int i = 1; i < elements.Count - 1; i++)
+            {
+                if (elements[i] is OpenBracketElement) deepness++;
+                if (elements[i] is CloseBracketElement) deepness--;
+                if (deepness == 0) return false;
+            }
+            return true;
+        }
 
+        // takes care of brackets
         private Type GetTopLayerType()
         {
             if (elements.Count == 1)
@@ -46,10 +66,16 @@ namespace EquationSolver
 
             bool containsPlusOrMinus = false;
             bool containsMultiplyOrDivide = false;
+            int deepness = 0;
             foreach (IElement element in elements)
             {
-                if (element is PlusElement || element is MinusElement) containsPlusOrMinus = true;
-                if (element is MultiplyElement || element is DivideElement) containsMultiplyOrDivide = true;
+                if (element is OpenBracketElement) deepness++;
+                if (element is CloseBracketElement) deepness--;
+                if (deepness == 0)
+                {
+                    if (element is PlusElement || element is MinusElement) containsPlusOrMinus = true;
+                    if (element is MultiplyElement || element is DivideElement) containsMultiplyOrDivide = true;
+                }
             }
 
             if (containsPlusOrMinus) return typeof(AddSubtractLayer);
@@ -118,10 +144,11 @@ namespace EquationSolver
             els.RemoveRange(0, length);
         }
 
+        // these methods take care of brackets
         private int GetFirstIndexOrCount(List<IElement> els, params Type[] search)
         {
             int index = els.Count;
-            foreach(Type type in search)
+            foreach (Type type in search)
             {
                 int indexOfElement = GetFirstIndexOfType(els, type);
                 if (indexOfElement != -1) index = Math.Min(index, indexOfElement);
@@ -131,9 +158,12 @@ namespace EquationSolver
         private int GetFirstIndexOfType(List<IElement> els, Type type)
         {
             int index = -1;
-            for(int i = 0; i<els.Count; i++)
+            int deepness = 0;
+            for (int i = 0; i < els.Count; i++)
             {
-                if(els[i].GetType() == type)
+                if (els[i] is OpenBracketElement) deepness++;
+                if (els[i] is CloseBracketElement) deepness--;
+                if (els[i].GetType() == type && deepness == 0)
                 {
                     index = i;
                     break;

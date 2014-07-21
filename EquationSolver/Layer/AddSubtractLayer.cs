@@ -26,6 +26,11 @@ namespace EquationSolver
             get { return subtractions; }
         }
 
+        public bool NeedsBrackets()
+        {
+            return (additions.Count + subtractions.Count) > 1;
+        }
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             double output = 0;
@@ -48,12 +53,14 @@ namespace EquationSolver
 
             for (int i = 0; i < additions.Count; i++)
             {
-                s += additions[i].ToString();
+                if(additions[i].NeedsBrackets()) s += "(" + additions[i].ToString() + ")";
+                else s += additions[i].ToString();
                 if (i < additions.Count - 1) s += "+";
             }
             for (int i = 0; i < subtractions.Count; i++)
             {
-                s += "-" + subtractions[i].ToString();
+                if (subtractions[i].NeedsBrackets()) s += "-(" + subtractions[i].ToString() + ")";
+                else s += "-" + subtractions[i].ToString();
             }
             return s;
         }

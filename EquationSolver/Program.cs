@@ -18,6 +18,7 @@ namespace EquationSolver
                 StringToLayersParser parser = new StringToLayersParser(text);
                 parser.Parse();
                 Console.WriteLine(parser.TopLayer.Calculate(null));
+                Console.ReadLine();
             }
             catch (ParseStringException e)
             {

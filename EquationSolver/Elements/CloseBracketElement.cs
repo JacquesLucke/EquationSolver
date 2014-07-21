@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace EquationSolver
 {
-    public interface ILayer
+    class OpenBracketElement : IElement
     {
-        bool NeedsBrackets();
-        double Calculate(Dictionary<char, double> variableToNumberDictionary);
+        public override string ToString()
+        {
+            return "(";
+        }
     }
 }

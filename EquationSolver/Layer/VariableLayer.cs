@@ -20,6 +20,11 @@ namespace EquationSolver
             get { return name; }
         }
 
+        public bool NeedsBrackets()
+        {
+            return false;
+        }
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             return variableToNumberDictionary[name];

@@ -19,6 +19,11 @@ namespace EquationSolver
             get { return value; }
         }
 
+        public bool NeedsBrackets()
+        {
+            return value < 0;
+        }
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             return value;
