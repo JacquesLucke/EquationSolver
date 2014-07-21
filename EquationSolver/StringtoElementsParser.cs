@@ -12,7 +12,6 @@ namespace EquationSolver
         List<IElement> elements;
         Dictionary<string, Type> stringToElementDictionary;
         Dictionary<char, Type> charToElementDictionary;
-        ILayer topLayer;
 
         public StringtoElementsParser(string text)
         {
@@ -38,10 +37,6 @@ namespace EquationSolver
             {
                 return elements;
             }
-        }
-        public ILayer TopLayer
-        {
-            get { return topLayer; }
         }
 
         public void Parse()
