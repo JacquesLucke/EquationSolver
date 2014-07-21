@@ -79,6 +79,14 @@ namespace EquationSolver
                     return (IElement)Activator.CreateInstance(pair.Value);
                 }
             }
+
+            // variables
+            if(Char.IsLetter(text[0]))
+            {
+                VariableElement element = new VariableElement(text[0]);
+                text = text.Substring(1);
+                return element;
+            }
             return null;
         }
         private NumberElement GetAndDeleteFirstNumberElement(ref string text)
