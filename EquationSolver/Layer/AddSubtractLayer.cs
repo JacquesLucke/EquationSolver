@@ -17,6 +17,15 @@ namespace EquationSolver
             subtractions = new List<ILayer>();
         }
 
+        public List<ILayer> Additions
+        {
+            get { return additions; }
+        }
+        public List<ILayer> Subtractions
+        {
+            get { return subtractions; }
+        }
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             double output = 0;

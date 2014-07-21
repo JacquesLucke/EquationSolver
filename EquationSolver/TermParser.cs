@@ -39,6 +39,10 @@ namespace EquationSolver
                 return elements;
             }
         }
+        public ILayer TopLayer
+        {
+            get { return topLayer; }
+        }
 
         public void Parse()
         {
@@ -122,28 +126,9 @@ namespace EquationSolver
 
         public void GenerateLayers()
         {
-            List<IElement> elements = new List<IElement>(this.elements);
-        }
-        private Type GetTopLayerType(List<IElement> elements)
-        {
-            if(elements.Count == 1)
-            {
-                if (elements[0] is NumberElement) return typeof(NumberLayer);
-                if (elements[0] is VariableElement) return typeof(VariableLayer);
-            }
-
-            bool containsPlusOrMinus = false;
-            bool containsMultiplyOrDivide = false;
-            foreach(IElement element in elements)
-            {
-                if (element is PlusElement || element is MinusElement) containsPlusOrMinus = true;
-                if (element is MultiplyElement || element is DivideElement) containsMultiplyOrDivide = true;
-            }
-
-            if (containsPlusOrMinus) return typeof(AddSubtractLayer);
-            if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
-
-            throw new CouldNotFindTopLevelLayerType();
+            LayerParser parser = new LayerParser(elements);
+            parser.Parse();
+            topLayer = parser.TopLayer;
         }
     }
 
