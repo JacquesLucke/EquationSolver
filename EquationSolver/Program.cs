@@ -31,6 +31,7 @@ namespace EquationSolver
         }
         private static List<IElement> GetElementsFromString(string text)
         {
+            text = NormalizeString(text);
             List<IElement> elements = new List<IElement>();
             int oldLength = text.Length;
             while (text.Length > 0)
@@ -40,6 +41,11 @@ namespace EquationSolver
                 oldLength = text.Length;
             }
             return elements;
+        }
+        private static string NormalizeString(string text)
+        {
+            text = text.Replace('.', ',');
+            return text;
         }
         private static IElement FindAndDeleteFirstElement(ref string text)
         {
