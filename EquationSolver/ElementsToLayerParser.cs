@@ -43,6 +43,7 @@ namespace EquationSolver
         }
         private bool CheckIfInBrackets()
         {
+            if (elements.Count < 2) return false;
             int deepness = 0;
             if (elements[0] is OpenBracketElement) deepness = 1;
             else return false;

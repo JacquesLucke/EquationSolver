@@ -17,6 +17,9 @@ namespace EquationSolver
             {
                 StringToLayersParser parser = new StringToLayersParser(text);
                 parser.Parse();
+                ILayer layer = parser.TopLayer;
+                SimplifyLayers(layer);
+                Console.WriteLine(layer.ToString());
                 Console.WriteLine(parser.TopLayer.Calculate(null));
                 Console.ReadLine();
             }
@@ -31,6 +34,11 @@ namespace EquationSolver
         {
             Console.Write("Term: ");
             return Console.ReadLine();
+        }
+
+        private static void SimplifyLayers(ILayer layer)
+        {
+            layer.Simplify();
         }
     }
 }

@@ -10,5 +10,6 @@ namespace EquationSolver
     {
         bool NeedsBrackets();
         double Calculate(Dictionary<char, double> variableToNumberDictionary);
+        void Simplify();
     }
 }

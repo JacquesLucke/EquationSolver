@@ -29,6 +29,9 @@ namespace EquationSolver
             return value;
         }
 
+        public void Simplify()
+        { }
+
         public override string ToString()
         {
             return Convert.ToString(value);

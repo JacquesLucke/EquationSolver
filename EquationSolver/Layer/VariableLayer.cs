@@ -29,6 +29,8 @@ namespace EquationSolver
         {
             return variableToNumberDictionary[name];
         }
+        public void Simplify()
+        { }
 
         public override string ToString()
         {

@@ -26,6 +26,42 @@ namespace EquationSolver
             get { return divisors; }
         }
 
+        public void Simplify()
+        {
+            for (int i = 0; i < factors.Count; i++)
+            {
+                if (factors[i] is MultiplyDivideLayer)
+                {
+                    MultiplyDivideLayer layer = (MultiplyDivideLayer)factors[i];
+                    factors.AddRange(layer.factors);
+                    divisors.AddRange(layer.divisors);
+                    factors.Remove(layer);
+                }
+            }
+            for (int i = 0; i < divisors.Count; i++)
+            {
+                if (divisors[i] is MultiplyDivideLayer)
+                {
+                    MultiplyDivideLayer layer = (MultiplyDivideLayer)divisors[i];
+                    divisors.AddRange(layer.factors);
+                    factors.AddRange(layer.divisors);
+                    divisors.Remove(layer);
+                }
+            }
+            SimplifyChildren();
+        }
+        public void SimplifyChildren()
+        {
+            foreach(ILayer layer in factors)
+            {
+                layer.Simplify();
+            }
+            foreach(ILayer layer in divisors)
+            {
+                layer.Simplify();
+            }
+        }
+
         public bool NeedsBrackets()
         {
             return (factors.Count + divisors.Count) > 1;
