@@ -41,12 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IElement.cs" />
-    <Compile Include="MinusElement.cs" />
-    <Compile Include="NumberElement.cs" />
-    <Compile Include="MultiplyElement.cs" />
+    <Compile Include="Elements\IElement.cs" />
+    <Compile Include="Elements\MinusElement.cs" />
+    <Compile Include="Elements\NumberElement.cs" />
+    <Compile Include="Elements\MultiplyElement.cs" />
     <Compile Include="DivideElement.cs" />
-    <Compile Include="PlusElement.cs" />
+    <Compile Include="TermParser.cs" />
+    <Compile Include="Elements\PlusElement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
