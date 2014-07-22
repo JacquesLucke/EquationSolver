@@ -145,7 +145,4 @@ namespace EquationSolver
     public class ParseStringException : Exception
     {
     }
-    public class CouldNotFindTopLevelLayerType : Exception
-    {
-    }
 }

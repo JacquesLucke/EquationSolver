@@ -27,6 +27,10 @@ namespace EquationSolver
             {
                 Console.WriteLine("Couldn't parse that term");
             }
+            catch (CouldNotFindTopLevelLayerType e)
+            {
+                Console.WriteLine("A problem with parsing this string occured");
+            }
             catch (MissingUnderscoreException e)
             {
                 Console.WriteLine("There is at least one underscore missing");

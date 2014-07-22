@@ -94,8 +94,11 @@ namespace EquationSolver
             if (containsPlusOrMinus) return typeof(AddSubtractLayer);
             if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
 
-            if (elements[0] is SqrtElement) return typeof(RootLayer);
-            if (elements[0] is RootElement) return typeof(RootLayer);
+            if (elements.Count > 0)
+            {
+                if (elements[0] is SqrtElement) return typeof(RootLayer);
+                if (elements[0] is RootElement) return typeof(RootLayer);
+            }
 
             throw new CouldNotFindTopLevelLayerType();
         }
@@ -224,6 +227,9 @@ namespace EquationSolver
         }
     }
 
+    public class CouldNotFindTopLevelLayerType : Exception
+    {
+    }
     public class MissingUnderscoreException : Exception
     {
     }

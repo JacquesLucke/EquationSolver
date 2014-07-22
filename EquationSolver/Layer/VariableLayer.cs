@@ -27,7 +27,11 @@ namespace EquationSolver
 
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
-            return variableToNumberDictionary[name];
+            double value = Double.NaN;
+            if (variableToNumberDictionary != null)
+                if (variableToNumberDictionary.ContainsKey(name)) 
+                    value = variableToNumberDictionary[name];
+            return value;
         }
         public void Simplify()
         { }
