@@ -38,7 +38,7 @@ namespace EquationSolver
             List<T> layersOfType = new List<T>();
             foreach(ILayer l in layers)
             {
-                if(layers is T) layersOfType.Add((T)l);
+                if(l is T) layersOfType.Add((T)l);
             }
             return layersOfType;
         }
