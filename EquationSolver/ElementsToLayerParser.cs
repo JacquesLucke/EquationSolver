@@ -139,18 +139,14 @@ namespace EquationSolver
             }
             if(ContainsType(elements, typeof(ExpElement)))
             {
-                int indexOfExp = GetFirstIndexOrCount(elements, typeof(ExpElement));
-
-                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(0, indexOfExp));
-                parser.Parse();
-                layer.Factors.Add(parser.TopLayer);
+                ILayer factor, exponent;
+                ParseMiddleOperatorType(new List<IElement>(elements), typeof(ExpElement), out factor, out exponent);
 
                 PowerLayer powerLayer = new PowerLayer();
                 powerLayer.BaseOfPower = new NumberLayer(10);
+                powerLayer.Exponent = exponent;
 
-                parser = new ElementsToLayersParser(elements.GetRange(indexOfExp + 1, elements.Count - indexOfExp - 1));
-                parser.Parse();
-                powerLayer.Exponent = parser.TopLayer;
+                layer.Factors.Add(factor);
                 layer.Factors.Add(powerLayer);
                 return layer;
             }
@@ -169,31 +165,21 @@ namespace EquationSolver
             }
             if (elements[0] is RootElement)
             {
-                elements.RemoveAt(0);
-                int indexOfSecondUnderscore = 1 + GetFirstIndexOrCount(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
-                if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
-                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
-                parser.Parse();
-                layer.NthRoot = parser.TopLayer;
-                elements.RemoveRange(0, indexOfSecondUnderscore + 1);
-                parser = new ElementsToLayersParser(new List<IElement>(elements));
-                parser.Parse();
-                layer.BaseOfRoot = parser.TopLayer;
+                ILayer nthRoot, baseOfRoot;
+                ParseBeginWithParameterType(new List<IElement>(elements), out nthRoot, out baseOfRoot);
+                layer.NthRoot = nthRoot;
+                layer.BaseOfRoot = baseOfRoot;
             }
             return layer;
         }
         private PowerLayer ParsePowerLayerFromElements()
         {
             PowerLayer layer = new PowerLayer();
-            int indexOfPowerSymbol = GetFirstIndexOrCount(elements, typeof(PowerElement));
 
-            ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(0, indexOfPowerSymbol));
-            parser.Parse();
-            layer.BaseOfPower = parser.TopLayer;
-
-            parser = new ElementsToLayersParser(elements.GetRange(indexOfPowerSymbol + 1, elements.Count - indexOfPowerSymbol - 1));
-            parser.Parse();
-            layer.Exponent = parser.TopLayer;
+            ILayer baseOfPower, exponent;
+            ParseMiddleOperatorType(new List<IElement>(elements), typeof(PowerElement), out baseOfPower, out exponent);
+            layer.BaseOfPower = baseOfPower;
+            layer.Exponent = exponent;
 
             return layer;
         }
@@ -202,16 +188,10 @@ namespace EquationSolver
             LogarithmLayer layer = new LogarithmLayer();
             if (elements[1] is UnderscoreElement)
             {
-                elements.RemoveAt(0);
-                int indexOfSecondUnderscore = 1 + GetFirstIndexOrCount(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
-                if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
-                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
-                parser.Parse();
-                layer.BaseOfLogarithm = parser.TopLayer;
-                elements.RemoveRange(0, indexOfSecondUnderscore + 1);
-                parser = new ElementsToLayersParser(new List<IElement>(elements));
-                parser.Parse();
-                layer.Number = parser.TopLayer;
+                ILayer baseOfLogarithm, number;
+                ParseBeginWithParameterType(new List<IElement>(elements), out baseOfLogarithm, out number);
+                layer.BaseOfLogarithm = baseOfLogarithm;
+                layer.Number = number;
             }
             else
             {
@@ -257,12 +237,39 @@ namespace EquationSolver
             els.RemoveRange(0, length);
         }
 
+        private void ParseBeginWithParameterType(List<IElement> els, out ILayer parameter, out ILayer layer)
+        {
+            els.RemoveAt(0);
+            int indexOfSecondUnderscore = 1 + GetFirstIndexOrCount(els.GetRange(1, els.Count - 1), typeof(UnderscoreElement));
+            if (indexOfSecondUnderscore == els.Count || !(els[0] is UnderscoreElement)) throw new MissingUnderscoreException();
+
+            ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(1, indexOfSecondUnderscore - 1));
+            parser.Parse();
+            parameter = parser.TopLayer;
+            els.RemoveRange(0, indexOfSecondUnderscore + 1);
+
+            parser = new ElementsToLayersParser(new List<IElement>(els));
+            parser.Parse();
+            layer = parser.TopLayer;
+        }
         private void ParseBeginWithoutParameterType(List<IElement> els, out ILayer layer)
         {
             els.RemoveAt(0);
             ElementsToLayersParser parser = new ElementsToLayersParser(els);
             parser.Parse();
             layer = parser.TopLayer;
+        }
+        private void ParseMiddleOperatorType(List<IElement> els, Type operatorType, out ILayer before, out ILayer after)
+        {
+            int indexOfPowerSymbol = GetFirstIndexOrCount(els, operatorType);
+
+            ElementsToLayersParser parser = new ElementsToLayersParser(els.GetRange(0, indexOfPowerSymbol));
+            parser.Parse();
+            before = parser.TopLayer;
+
+            parser = new ElementsToLayersParser(els.GetRange(indexOfPowerSymbol + 1, els.Count - indexOfPowerSymbol - 1));
+            parser.Parse();
+            after = parser.TopLayer;
         }
 
         // these methods take care of brackets
