@@ -21,11 +21,7 @@ namespace EquationSolver
         }
         public void Parse()
         {
-            if (CheckIfInBrackets())
-            {
-                elements.RemoveAt(0);
-                elements.RemoveAt(elements.Count - 1);
-            }
+            DeleteSurroundingBrackets();
 
             Type topLayerType = GetTopLayerType();
 
@@ -40,6 +36,19 @@ namespace EquationSolver
 
             if (topLayerType == typeof(MultiplyDivideLayer))
                 topLayer = ParseMultiplyDivideLayerFromElements();
+        }
+        private void DeleteSurroundingBrackets()
+        {
+            int oldLength = 0;
+            while (oldLength != elements.Count)
+            {
+                oldLength = elements.Count;
+                if (CheckIfInBrackets())
+                {
+                    elements.RemoveAt(0);
+                    elements.RemoveAt(elements.Count - 1);
+                }
+            }
         }
         private bool CheckIfInBrackets()
         {
