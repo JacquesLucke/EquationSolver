@@ -41,16 +41,19 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
+            StrongSimplificationOnChildren();
             CalculateNonVariableTerms();
             CombineMultiplyDivideLayers();
         }
-        private void CalculateNonVariableTerms()
+        private void StrongSimplificationOnChildren()
         {
             foreach (ILayer layer in additions)
                 layer.StrongSimplification();
             foreach (ILayer layer in subtractions)
                 layer.StrongSimplification();
-
+        }
+        private void CalculateNonVariableTerms()
+        {
             NumberLayer newNumber = new NumberLayer(0);
             for (int i = 0; i < additions.Count; i++)
             {
@@ -120,8 +123,8 @@ namespace EquationSolver
             parents[1] = (MultiplyDivideLayer)Layer.FindParentLayer(pair[1], tmp);
 
             MultiplyDivideLayer newLayer = new MultiplyDivideLayer();
-            newLayer.Factors.Add(pair[0]);
             newLayer.Factors.Add(CreateNonCombinedLayerPart(pair, parents));
+            newLayer.Factors.Add(pair[0]);
             additions.Add(newLayer);
 
             RemoveFromLayers(parents[0]);

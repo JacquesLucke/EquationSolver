@@ -54,6 +54,7 @@ namespace EquationSolver
         {
             MultiplyDivideLayer layer = new MultiplyDivideLayer();
             layer.Factors.Add(nLayer);
+            layer.Factors.Add(new NumberLayer(1));
             return layer;
         }
         public static List<ILayer> GetAllFactors(List<MultiplyDivideLayer> layers)
