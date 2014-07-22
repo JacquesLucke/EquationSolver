@@ -36,6 +36,9 @@ namespace EquationSolver
 
             if (topLayerType == typeof(MultiplyDivideLayer))
                 topLayer = ParseMultiplyDivideLayerFromElements();
+
+            if (topLayerType == typeof(RootLayer))
+                topLayer = ParseRootLayerFromElements();
         }
         private void DeleteSurroundingBrackets()
         {
@@ -91,6 +94,8 @@ namespace EquationSolver
             if (containsPlusOrMinus) return typeof(AddSubtractLayer);
             if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
 
+            if (elements[0] is SqrtElement) return typeof(RootLayer);
+
             throw new CouldNotFindTopLevelLayerType();
         }
 
@@ -120,6 +125,20 @@ namespace EquationSolver
             while (els.Count > 0)
                 AddFirstToLayerAndDeleteFromList(layer, els);
 
+            return layer;
+        }
+        private RootLayer ParseRootLayerFromElements()
+        {
+            RootLayer layer = new RootLayer();
+            if(elements[0] is SqrtElement)
+            {
+                layer.NthRoot = new NumberLayer(2);
+
+                elements.RemoveAt(0);
+                ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
+                parser.Parse();
+                layer.BaseOfRoot = parser.TopLayer;
+            }
             return layer;
         }
 
