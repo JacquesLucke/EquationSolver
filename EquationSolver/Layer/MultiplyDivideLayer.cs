@@ -38,7 +38,12 @@ namespace EquationSolver
 
             return variables;
         }
+
         public void StrongSimplification()
+        {
+            CalculateNonVariableTerms();
+        }
+        private void CalculateNonVariableTerms()
         {
             foreach (ILayer layer in factors)
                 layer.StrongSimplification();
@@ -66,6 +71,7 @@ namespace EquationSolver
             }
             factors.Add(newNumber);
         }
+
         public void Simplify()
         {
             SimplifyChildren();

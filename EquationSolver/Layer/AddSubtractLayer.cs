@@ -38,7 +38,12 @@ namespace EquationSolver
 
             return variables;
         }
+
         public void StrongSimplification()
+        {
+            CalculateNonVariableTerms();
+        }
+        private void CalculateNonVariableTerms()
         {
             foreach (ILayer layer in additions)
                 layer.StrongSimplification();
@@ -65,12 +70,13 @@ namespace EquationSolver
                 }
             }
             if (newNumber.Value > 0) additions.Add(newNumber);
-            if(newNumber.Value < 0)
+            if (newNumber.Value < 0)
             {
                 newNumber.Value = -newNumber.Value;
                 subtractions.Add(newNumber);
             }
         }
+
         public void Simplify()
         {
             SimplifyChildren();

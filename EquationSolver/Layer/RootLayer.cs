@@ -42,7 +42,12 @@ namespace EquationSolver
 
             return variables;
         }
+
         public void StrongSimplification()
+        {
+            CalculateNonVariableTerms();
+        }
+        private void CalculateNonVariableTerms()
         {
             nthRoot.StrongSimplification();
             baseOfRoot.StrongSimplification();
@@ -50,6 +55,7 @@ namespace EquationSolver
             if (!Double.IsNaN(nthRoot.Calculate(null))) nthRoot = new NumberLayer(nthRoot.Calculate(null));
             if (!Double.IsNaN(baseOfRoot.Calculate(null))) baseOfRoot = new NumberLayer(baseOfRoot.Calculate(null));
         }
+
         public void Simplify()
         {
             SimplifyChildren();

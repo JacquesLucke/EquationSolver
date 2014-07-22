@@ -43,7 +43,13 @@ namespace EquationSolver
             return variables;
         }
         public void StrongSimplification()
-        { }
+        {
+            baseOfLogarithm.StrongSimplification();
+            number.StrongSimplification();
+
+            if (!Double.IsNaN(baseOfLogarithm.Calculate(null))) baseOfLogarithm = new NumberLayer(baseOfLogarithm.Calculate(null));
+            if (!Double.IsNaN(number.Calculate(null))) number = new NumberLayer(number.Calculate(null));
+        }
         public void Simplify()
         {
             SimplifyChildren();
