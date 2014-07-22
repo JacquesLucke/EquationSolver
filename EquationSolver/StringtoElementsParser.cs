@@ -135,6 +135,11 @@ namespace EquationSolver
         }
         private void Cleanup()
         {
+            AddMissingBracketsInTheEnd();
+            AddMultiplyElements();
+        }
+        private void AddMissingBracketsInTheEnd()
+        {
             int closeBracketsMissing = 0;
             foreach (IElement element in elements)
             {
@@ -144,6 +149,19 @@ namespace EquationSolver
             for (int i = 0; i < closeBracketsMissing; i++)
             {
                 elements.Add(new CloseBracketElement());
+            }
+        }
+        private void AddMultiplyElements()
+        {
+            for(int i = 1; i < elements.Count; i++)
+            {
+                IElement a = elements[i - 1];
+                IElement b = elements[i];
+
+                if (a is NumberElement && b is VariableElement) elements.Insert(i, new MultiplyElement());
+                if (a is VariableElement && b is VariableElement) elements.Insert(i, new MultiplyElement());
+                if (a is NumberElement && b is OpenBracketElement) elements.Insert(i, new MultiplyElement());
+                if (a is VariableElement && b is OpenBracketElement) elements.Insert(i, new MultiplyElement());
             }
         }
     }
