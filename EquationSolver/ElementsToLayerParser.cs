@@ -80,19 +80,8 @@ namespace EquationSolver
                 if (elements[0] is VariableElement) return typeof(VariableLayer);
             }
 
-            bool containsPlusOrMinus = false;
-            bool containsMultiplyOrDivide = false;
-            int deepness = 0;
-            foreach (IElement element in elements)
-            {
-                if (element is OpenBracketElement) deepness++;
-                if (element is CloseBracketElement) deepness--;
-                if (deepness == 0)
-                {
-                    if (element is PlusElement || element is MinusElement) containsPlusOrMinus = true;
-                    if (element is MultiplyElement || element is DivideElement) containsMultiplyOrDivide = true;
-                }
-            }
+            bool containsPlusOrMinus =  GetFirstIndexOrCount(elements, typeof(PlusElement), typeof(MinusElement)) != elements.Count;
+            bool containsMultiplyOrDivide = GetFirstIndexOrCount(elements, typeof(MultiplyElement), typeof(DivideElement)) != elements.Count;
 
             if (containsPlusOrMinus) return typeof(AddSubtractLayer);
             if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
@@ -103,17 +92,7 @@ namespace EquationSolver
                 if (elements[0] is RootElement) return typeof(RootLayer);
             }
 
-            bool containsPowerSymbol = false;
-            deepness = 0;
-            foreach (IElement element in elements)
-            {
-                if (element is OpenBracketElement) deepness++;
-                if (element is CloseBracketElement) deepness--;
-                if (deepness == 0)
-                {
-                    if (element is PowerElement) containsPowerSymbol = true;
-                }
-            }
+            bool containsPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement)) != elements.Count;
             if (containsPowerSymbol) return typeof(PowerLayer);
 
             throw new CouldNotFindTopLevelLayerType();
@@ -162,16 +141,8 @@ namespace EquationSolver
             if (elements[0] is RootElement)
             {
                 elements.RemoveAt(0);
-                int indexOfSecondUnderscore = -1;
-                for (int i = 1; i < elements.Count; i++)
-                {
-                    if (elements[i] is UnderscoreElement)
-                    {
-                        indexOfSecondUnderscore = i;
-                        break;
-                    }
-                }
-                if (indexOfSecondUnderscore == -1 || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
+                int indexOfSecondUnderscore = 1 + GetFirstIndexOfType(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
+                if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
                 ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
                 parser.Parse();
                 layer.NthRoot = parser.TopLayer;
@@ -184,17 +155,7 @@ namespace EquationSolver
         }
         private PowerLayer ParsePowerLayerFromElements()
         {
-            int indexOfPowerSymbol = -1;
-            int deepness = 0;
-            for (int i = 0; i < elements.Count; i++)
-            {
-                if (elements[i] is OpenBracketElement) deepness++;
-                if (elements[i] is CloseBracketElement) deepness--;
-                if (elements[i] is PowerElement && deepness == 0)
-                {
-                    indexOfPowerSymbol = i;
-                }
-            }
+            int indexOfPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement));
 
             PowerLayer layer = new PowerLayer();
 
