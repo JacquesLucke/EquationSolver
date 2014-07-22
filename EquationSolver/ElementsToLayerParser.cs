@@ -163,10 +163,9 @@ namespace EquationSolver
             {
                 layer.NthRoot = new NumberLayer(2);
 
-                elements.RemoveAt(0);
-                ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
-                parser.Parse();
-                layer.BaseOfRoot = parser.TopLayer;
+                ILayer baseOfRoot;
+                ParseBeginWithoutParameterType(new List<IElement>(elements), out baseOfRoot);
+                layer.BaseOfRoot = baseOfRoot;
             }
             if (elements[0] is RootElement)
             {
@@ -219,10 +218,10 @@ namespace EquationSolver
                 if (elements[0] is LogElement) layer.BaseOfLogarithm = new NumberLayer(10);
                 if (elements[0] is LnElement) layer.BaseOfLogarithm = new NumberLayer(Math.E);
                 if (elements[0] is LbElement) layer.BaseOfLogarithm = new NumberLayer(2);
-                elements.RemoveAt(0);
-                ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
-                parser.Parse();
-                layer.Number = parser.TopLayer;
+
+                ILayer number;
+                ParseBeginWithoutParameterType(new List<IElement>(elements), out number);
+                layer.Number = number;
             }
             return layer;
         }
@@ -256,6 +255,14 @@ namespace EquationSolver
             if (!isFactor) layer.Divisors.Add(parser.TopLayer);
 
             els.RemoveRange(0, length);
+        }
+
+        private void ParseBeginWithoutParameterType(List<IElement> els, out ILayer layer)
+        {
+            els.RemoveAt(0);
+            ElementsToLayersParser parser = new ElementsToLayersParser(els);
+            parser.Parse();
+            layer = parser.TopLayer;
         }
 
         // these methods take care of brackets
