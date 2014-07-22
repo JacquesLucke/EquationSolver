@@ -20,7 +20,7 @@ namespace EquationSolver
                 ILayer layer = parser.TopLayer;
                 SimplifyLayers(layer);
                 Console.WriteLine(layer.ToString());
-                Console.WriteLine(parser.TopLayer.Calculate(null));
+                Console.WriteLine(layer.Calculate(null));
                 Console.ReadLine();
             }
             catch (ParseStringException e)
