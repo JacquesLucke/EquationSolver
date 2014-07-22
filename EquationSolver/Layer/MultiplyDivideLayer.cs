@@ -40,6 +40,8 @@ namespace EquationSolver
         }
         public void Simplify()
         {
+            SimplifyChildren();
+
             for (int i = 0; i < factors.Count; i++)
             {
                 if (factors[i] is MultiplyDivideLayer)
@@ -60,7 +62,6 @@ namespace EquationSolver
                     divisors.Remove(layer);
                 }
             }
-            SimplifyChildren();
         }
         private void SimplifyChildren()
         {

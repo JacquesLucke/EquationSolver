@@ -40,6 +40,8 @@ namespace EquationSolver
         }
         public void Simplify()
         {
+            SimplifyChildren();
+
             for (int i = 0; i < additions.Count; i++)
             {
                 if (additions[i] is AddSubtractLayer)
@@ -60,7 +62,6 @@ namespace EquationSolver
                     subtractions.Remove(layer);
                 }
             }
-            SimplifyChildren();
         }
         private void SimplifyChildren()
         {
