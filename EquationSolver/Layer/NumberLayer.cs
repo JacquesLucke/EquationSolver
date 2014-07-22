@@ -29,6 +29,10 @@ namespace EquationSolver
             return value;
         }
 
+        public HashSet<char> GetVariables()
+        {
+            return new HashSet<char>();
+        }
         public void Simplify()
         { }
 

@@ -28,6 +28,15 @@ namespace EquationSolver
             set { exponent = value; }
         }
 
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+
+            variables.UnionWith(baseOfPower.GetVariables());
+            variables.UnionWith(exponent.GetVariables());
+
+            return variables;
+        }
         public void Simplify()
         {
             SimplifyChildren();

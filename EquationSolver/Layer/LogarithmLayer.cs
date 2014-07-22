@@ -33,6 +33,15 @@ namespace EquationSolver
             return Math.Log(number.Calculate(variableToNumberDictionary), baseOfLogarithm.Calculate(variableToNumberDictionary));
         }
 
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+
+            variables.UnionWith(baseOfLogarithm.GetVariables());
+            variables.UnionWith(number.GetVariables());
+
+            return variables;
+        }
         public void Simplify()
         {
             SimplifyChildren();

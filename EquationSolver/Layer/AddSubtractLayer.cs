@@ -26,6 +26,18 @@ namespace EquationSolver
             get { return subtractions; }
         }
 
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+
+            foreach (ILayer layer in additions)
+                variables.UnionWith(layer.GetVariables());
+
+            foreach (ILayer layer in subtractions)
+                variables.UnionWith(layer.GetVariables());
+
+            return variables;
+        }
         public void Simplify()
         {
             for (int i = 0; i < additions.Count; i++)

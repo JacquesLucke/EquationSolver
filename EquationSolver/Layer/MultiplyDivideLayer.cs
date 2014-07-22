@@ -26,6 +26,18 @@ namespace EquationSolver
             get { return divisors; }
         }
 
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+
+            foreach (ILayer layer in factors)
+                variables.UnionWith(layer.GetVariables());
+
+            foreach (ILayer layer in divisors)
+                variables.UnionWith(layer.GetVariables());
+
+            return variables;
+        }
         public void Simplify()
         {
             for (int i = 0; i < factors.Count; i++)
@@ -50,7 +62,7 @@ namespace EquationSolver
             }
             SimplifyChildren();
         }
-        public void SimplifyChildren()
+        private void SimplifyChildren()
         {
             foreach (ILayer layer in factors)
             {

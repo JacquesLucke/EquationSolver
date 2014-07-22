@@ -10,6 +10,8 @@ namespace EquationSolver
     {
         bool NeedsBrackets();
         double Calculate(Dictionary<char, double> variableToNumberDictionary);
+
+        HashSet<char> GetVariables();
         void Simplify();
     }
 }

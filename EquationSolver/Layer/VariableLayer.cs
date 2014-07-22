@@ -33,6 +33,13 @@ namespace EquationSolver
                     value = variableToNumberDictionary[name];
             return value;
         }
+
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+            variables.Add(name);
+            return variables;
+        }
         public void Simplify()
         { }
 

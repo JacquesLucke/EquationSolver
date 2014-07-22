@@ -33,6 +33,15 @@ namespace EquationSolver
             return Math.Pow(baseOfRoot.Calculate(variableToNumberDictionary), 1 / nthRoot.Calculate(variableToNumberDictionary));
         }
 
+        public HashSet<char> GetVariables()
+        {
+            HashSet<char> variables = new HashSet<char>();
+
+            variables.UnionWith(nthRoot.GetVariables());
+            variables.UnionWith(baseOfRoot.GetVariables());
+
+            return variables;
+        }
         public void Simplify()
         {
             SimplifyChildren();
