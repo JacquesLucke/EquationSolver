@@ -93,7 +93,10 @@ namespace EquationSolver
             {
                 if (elements[0] is SqrtElement) return typeof(RootLayer);
                 if (elements[0] is RootElement) return typeof(RootLayer);
+
                 if (elements[0] is LogElement) return typeof(LogarithmLayer);
+                if (elements[0] is LnElement) return typeof(LogarithmLayer);
+                if (elements[0] is LbElement) return typeof(LogarithmLayer);
             }
 
             bool containsPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement)) != elements.Count;
@@ -176,9 +179,24 @@ namespace EquationSolver
         private LogarithmLayer ParseLogarithmLayerFromElements()
         {
             LogarithmLayer layer = new LogarithmLayer();
-            if(elements[0] is LogElement)
+            if (elements[1] is UnderscoreElement)
             {
-                layer.BaseOfLogarithm = new NumberLayer(10);
+                elements.RemoveAt(0);
+                int indexOfSecondUnderscore = 1 + GetFirstIndexOfType(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
+                if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
+                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
+                parser.Parse();
+                layer.BaseOfLogarithm = parser.TopLayer;
+                elements.RemoveRange(0, indexOfSecondUnderscore + 1);
+                parser = new ElementsToLayersParser(new List<IElement>(elements));
+                parser.Parse();
+                layer.Number = parser.TopLayer;
+            }
+            else
+            {
+                if (elements[0] is LogElement) layer.BaseOfLogarithm = new NumberLayer(10);
+                if (elements[0] is LnElement) layer.BaseOfLogarithm = new NumberLayer(Math.E);
+                if (elements[0] is LbElement) layer.BaseOfLogarithm = new NumberLayer(2);
                 elements.RemoveAt(0);
                 ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
                 parser.Parse();

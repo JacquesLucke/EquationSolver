@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\IElement.cs" />
+    <Compile Include="Elements\LbElement.cs" />
+    <Compile Include="Elements\LnElement.cs" />
     <Compile Include="Elements\LogElement.cs" />
     <Compile Include="Elements\MinusElement.cs" />
     <Compile Include="Elements\NumberElement.cs" />
