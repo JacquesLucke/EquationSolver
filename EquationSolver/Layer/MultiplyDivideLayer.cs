@@ -69,7 +69,7 @@ namespace EquationSolver
                     i--;
                 }
             }
-            factors.Add(newNumber);
+            if(newNumber.Value != 1) factors.Add(newNumber);
         }
 
         public void Simplify()
