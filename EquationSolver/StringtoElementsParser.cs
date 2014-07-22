@@ -22,6 +22,7 @@ namespace EquationSolver
         {
             stringToElementDictionary = new Dictionary<string, Type>();
             stringToElementDictionary.Add("sqrt", typeof(SqrtElement));
+            stringToElementDictionary.Add("root", typeof(RootElement));
 
             charToElementDictionary = new Dictionary<char, Type>();
             charToElementDictionary.Add('+', typeof(PlusElement));
@@ -31,6 +32,7 @@ namespace EquationSolver
             charToElementDictionary.Add('^', typeof(PowerElement));
             charToElementDictionary.Add('(', typeof(OpenBracketElement));
             charToElementDictionary.Add(')', typeof(CloseBracketElement));
+            charToElementDictionary.Add('_', typeof(UnderscoreElement));
         }
 
         public List<IElement> Elements

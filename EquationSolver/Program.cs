@@ -27,6 +27,10 @@ namespace EquationSolver
             {
                 Console.WriteLine("Couldn't parse that term");
             }
+            catch (MissingUnderscoreException e)
+            {
+                Console.WriteLine("There is at least one underscore missing");
+            }
             Console.ReadLine();
         }
 

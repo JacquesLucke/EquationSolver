@@ -95,6 +95,7 @@ namespace EquationSolver
             if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
 
             if (elements[0] is SqrtElement) return typeof(RootLayer);
+            if (elements[0] is RootElement) return typeof(RootLayer);
 
             throw new CouldNotFindTopLevelLayerType();
         }
@@ -136,6 +137,27 @@ namespace EquationSolver
 
                 elements.RemoveAt(0);
                 ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
+                parser.Parse();
+                layer.BaseOfRoot = parser.TopLayer;
+            }
+            if(elements[0] is RootElement)
+            {
+                elements.RemoveAt(0);
+                int indexOfSecondUnderscore = -1;
+                for(int i = 1; i < elements.Count; i++)
+                {
+                    if(elements[i] is UnderscoreElement)
+                    {
+                        indexOfSecondUnderscore = i;
+                        break;
+                    }
+                }
+                if (indexOfSecondUnderscore == -1 || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
+                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
+                parser.Parse();
+                layer.NthRoot = parser.TopLayer;
+                elements.RemoveRange(0, indexOfSecondUnderscore + 1);
+                parser = new ElementsToLayersParser(new List<IElement>(elements));
                 parser.Parse();
                 layer.BaseOfRoot = parser.TopLayer;
             }
@@ -200,5 +222,9 @@ namespace EquationSolver
             }
             return index;
         }
+    }
+
+    public class MissingUnderscoreException : Exception
+    {
     }
 }

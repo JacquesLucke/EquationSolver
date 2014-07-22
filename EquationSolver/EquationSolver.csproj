@@ -49,7 +49,9 @@
     <Compile Include="Elements\CloseBracketElement.cs" />
     <Compile Include="Elements\OpenBracketElement.cs" />
     <Compile Include="Elements\PowerElement.cs" />
+    <Compile Include="Elements\RootElement.cs" />
     <Compile Include="Elements\SqrtElement.cs" />
+    <Compile Include="Elements\UnderscoreElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
     <Compile Include="ElementsToLayerParser.cs" />
     <Compile Include="Layer\MultiplyDivideLayer.cs" />
