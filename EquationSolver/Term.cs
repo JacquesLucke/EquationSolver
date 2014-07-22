@@ -34,6 +34,10 @@ namespace EquationSolver
         {
             topLayer.Simplify();
         }
+        public HashSet<char> GetVariables()
+        {
+            return topLayer.GetVariables();
+        }
 
         public override string ToString()
         {
