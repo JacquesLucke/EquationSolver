@@ -26,6 +26,7 @@ namespace EquationSolver
             stringToElementDictionary.Add("log", typeof(LogElement));
             stringToElementDictionary.Add("ln", typeof(LnElement));
             stringToElementDictionary.Add("lb", typeof(LbElement));
+            stringToElementDictionary.Add("PI", typeof(PiElement));
 
             charToElementDictionary = new Dictionary<char, Type>();
             charToElementDictionary.Add('+', typeof(PlusElement));

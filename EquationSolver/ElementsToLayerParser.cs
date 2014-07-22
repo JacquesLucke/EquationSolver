@@ -81,6 +81,7 @@ namespace EquationSolver
             {
                 if (elements[0] is NumberElement) return typeof(NumberLayer);
                 if (elements[0] is EElement) return typeof(NumberLayer);
+                if (elements[0] is PiElement) return typeof(NumberLayer);
                 if (elements[0] is VariableElement) return typeof(VariableLayer);
             }
 
@@ -109,6 +110,7 @@ namespace EquationSolver
         private NumberLayer ParseNumberLayerFromElement()
         {
             if (elements[0] is EElement) return new NumberLayer(Math.E);
+            if (elements[0] is PiElement) return new NumberLayer(Math.PI);
             return new NumberLayer(((NumberElement)elements[0]).Number);
         }
         private VariableLayer ParseVariableLayerFromElement()
