@@ -32,5 +32,40 @@ namespace EquationSolver
             }
             return variableTable;
         }
+
+        public static List<T> GetAllOfType<T>(List<ILayer> layers)
+        {
+            List<T> layersOfType = new List<T>();
+            foreach(ILayer l in layers)
+            {
+                if(layers is T) layersOfType.Add((T)l);
+            }
+            return layersOfType;
+        }
+        public static void ReplaceNumbersWithMultiplyLayers(List<ILayer> layers)
+        {
+            for(int i = 0; i < layers.Count; i++)
+            {
+                if(layers[i] is NumberLayer)
+                {
+                    layers[i] = ToMultiplyDivideLayer((NumberLayer)layers[i]);
+                }
+            }
+        }
+        public static MultiplyDivideLayer ToMultiplyDivideLayer(NumberLayer nLayer)
+        {
+            MultiplyDivideLayer layer = new MultiplyDivideLayer();
+            layer.Factors.Add(nLayer);
+            return layer;
+        }
+        public static List<ILayer> GetAllFactors(List<MultiplyDivideLayer> layers)
+        {
+            List<ILayer> subFactors = new List<ILayer>();
+            foreach(MultiplyDivideLayer layer in layers)
+            {
+                subFactors.AddRange(layer.Factors);
+            }
+            return subFactors;
+        }
     }
 }

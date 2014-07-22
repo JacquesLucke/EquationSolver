@@ -77,36 +77,26 @@ namespace EquationSolver
                 subtractions.Add(newNumber);
             }
         }
-        private List<MultiplyDivideLayer> GetAllMultiplyDivideLayers()
-        {
-            List<MultiplyDivideLayer> layers = new List<MultiplyDivideLayer>();
-            foreach (ILayer layer in additions)
-                if (layer is MultiplyDivideLayer) layers.Add((MultiplyDivideLayer)layer);
-            foreach (ILayer layer in subtractions)
-                if (layer is MultiplyDivideLayer) layers.Add((MultiplyDivideLayer)layer);
-            return layers;
-        }
+        
         private void CombineMultiplyDivideLayers()
         {
-            List<MultiplyDivideLayer> all = GetAllMultiplyDivideLayers();
+            Layer.ReplaceNumbersWithMultiplyLayers(additions);
+            Layer.ReplaceNumbersWithMultiplyLayers(subtractions);
 
-            List<ILayer> subAll = new List<ILayer>();
-            foreach (ILayer layer in all)
-            {
-                if (layer is MultiplyDivideLayer)
-                {
-                    MultiplyDivideLayer l = (MultiplyDivideLayer)layer;
-                    subAll.AddRange(l.Factors);
-                }
-            }
+            List<MultiplyDivideLayer> all = new List<MultiplyDivideLayer>();
+            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(additions));
+            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(subtractions));
+
+            List<ILayer> subFactors = Layer.GetAllFactors(all);
+
             List<KeyValuePair<ILayer, ILayer>> pairs = new List<KeyValuePair<ILayer, ILayer>>();
-            for (int i = 0; i < subAll.Count - 1; i++)
+            for (int i = 0; i < subFactors.Count - 1; i++)
             {
-                for (int j = i + 1; j < subAll.Count; j++)
+                for (int j = i + 1; j < subFactors.Count; j++)
                 {
-                    if (Layer.Compare(subAll[i], subAll[j]))
+                    if (Layer.Compare(subFactors[i], subFactors[j]))
                     {
-                        pairs.Add(new KeyValuePair<ILayer, ILayer>(subAll[i], subAll[j]));
+                        pairs.Add(new KeyValuePair<ILayer, ILayer>(subFactors[i], subFactors[j]));
                     }
                 }
             }
