@@ -43,7 +43,13 @@ namespace EquationSolver
             return variables;
         }
         public void StrongSimplification()
-        { }
+        {
+            nthRoot.StrongSimplification();
+            baseOfRoot.StrongSimplification();
+
+            if (!Double.IsNaN(nthRoot.Calculate(null))) nthRoot = new NumberLayer(nthRoot.Calculate(null));
+            if (!Double.IsNaN(baseOfRoot.Calculate(null))) baseOfRoot = new NumberLayer(baseOfRoot.Calculate(null));
+        }
         public void Simplify()
         {
             SimplifyChildren();

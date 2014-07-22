@@ -59,7 +59,7 @@ namespace EquationSolver
             {
                 if (!Double.IsNaN(divisors[i].Calculate(null)))
                 {
-                    newNumber.Value -= divisors[i].Calculate(null);
+                    newNumber.Value /= divisors[i].Calculate(null);
                     divisors.RemoveAt(i);
                     i--;
                 }
