@@ -12,15 +12,12 @@ namespace EquationSolver
         static void Main(string[] args)
         {
             string text = GetInputString();
-            List<IElement> elements = new List<IElement>();
             try
             {
-                StringToLayersParser parser = new StringToLayersParser(text);
-                parser.Parse();
-                ILayer layer = parser.TopLayer;
-                SimplifyLayers(layer);
-                Console.WriteLine(layer.ToString());
-                Console.WriteLine(layer.Calculate(null));
+                Term term = Term.FromString(text);
+                term.Simplify();
+                Console.WriteLine(term.ToString());
+                Console.WriteLine(term.Calculate());
                 Console.ReadLine();
             }
             catch (ParseStringException e)
@@ -42,11 +39,6 @@ namespace EquationSolver
         {
             Console.Write("Term: ");
             return Console.ReadLine();
-        }
-
-        private static void SimplifyLayers(ILayer layer)
-        {
-            layer.Simplify();
         }
     }
 }
