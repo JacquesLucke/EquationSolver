@@ -13,15 +13,23 @@ namespace EquationSolver
 
         static void Main(string[] args)
         {
-            string text = GetInputString();
             try
             {
-                Term term = Term.FromString(text);
-                term.StrongSimplification();
-                Console.WriteLine("Simplification: " + term.ToString());
-                HashSet<char> s = term.GetVariables();
-                if (s.Count == 0) Console.WriteLine("Result: "+ term.Calculate());
-                Console.ReadLine();
+                Term term = Term.FromString("0");
+
+                while (true)
+                {
+                    string text = GetInputString("Addition");
+                    Term addition = Term.FromString(text);
+                    term.Add(addition);
+                    term.StrongSimplification();
+                    term.StrongSimplification();
+                    term.StrongSimplification();
+                    Console.WriteLine("Simplification: " + term.ToString());
+                    HashSet<char> s = term.GetVariables();
+                    if (s.Count == 0) Console.WriteLine("Result: " + term.Calculate());
+                    Console.WriteLine();
+                }
             }
             catch (ParseStringException e)
             {
@@ -38,9 +46,9 @@ namespace EquationSolver
             Console.ReadLine();
         }
 
-        private static string GetInputString()
+        private static string GetInputString(string text)
         {
-            Console.Write("Term: ");
+            Console.Write(text + ": ");
             return Console.ReadLine();
         }
     }

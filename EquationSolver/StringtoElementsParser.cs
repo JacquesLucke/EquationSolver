@@ -69,6 +69,7 @@ namespace EquationSolver
         }
         private string NormalizeString(string text)
         {
+            if (text == "") text = "0";
             text = text.Replace('.', ',');
             text = text.Replace(" ", "");
             while (true)

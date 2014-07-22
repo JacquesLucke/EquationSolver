@@ -44,6 +44,20 @@ namespace EquationSolver
             return topLayer.GetVariables();
         }
 
+        public ILayer TopLayer
+        {
+            get { return topLayer; }
+        }
+
+        public void Add(Term addition)
+        {
+            AddSubtractLayer newTopLayer = new AddSubtractLayer();
+            newTopLayer.Additions.Add(topLayer);
+            newTopLayer.Additions.Add(addition.TopLayer);
+
+            topLayer = newTopLayer;
+        }
+
         public override string ToString()
         {
             return topLayer.ToString();

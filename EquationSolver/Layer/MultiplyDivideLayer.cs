@@ -43,9 +43,26 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
+            StrongSimplificationOnChildren();
+            GetBetterChildren();
             CalculateNonVariableTerms();
             RemoveOnes();
             LeaveOnlyZeroIfOneFactorIsZero();
+            StrongSimplificationOnChildren();
+        }
+        private void GetBetterChildren()
+        {
+            for (int i = 0; i < factors.Count; i++)
+                factors[i] = Layer.GetBetterChild(factors[i]);
+            for (int i = 0; i < divisors.Count; i++)
+                divisors[i] = Layer.GetBetterChild(divisors[i]);
+        }
+        private void StrongSimplificationOnChildren()
+        {
+            foreach (ILayer layer in factors)
+                layer.StrongSimplification();
+            foreach (ILayer layer in divisors)
+                layer.StrongSimplification();
         }
         private void CalculateNonVariableTerms()
         {

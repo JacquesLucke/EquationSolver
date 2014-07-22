@@ -41,10 +41,11 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
-            StrongSimplificationOnChildren();
             CalculateNonVariableTerms();
+            StrongSimplificationOnChildren();
             CombineMultiplyDivideLayers();
             StrongSimplificationOnChildren();
+            GetBetterChildrenLayers();
         }
         private void StrongSimplificationOnChildren()
         {
@@ -81,6 +82,13 @@ namespace EquationSolver
                 subtractions.Add(newNumber);
             }
         }
+        private void GetBetterChildrenLayers()
+        {
+            for (int i = 0; i < additions.Count; i++)
+                additions[i] = Layer.GetBetterChild(additions[i]);
+            for (int i = 0; i < subtractions.Count; i++)
+                subtractions[i] = Layer.GetBetterChild(subtractions[i]);
+        }
 
         private void CombineMultiplyDivideLayers()
         {
@@ -98,7 +106,7 @@ namespace EquationSolver
             if (equalPairs.Count > 0)
             {
                 CombinePair(equalPairs[0], all);
-
+                GetBetterChildrenLayers();
                 StrongSimplification();
             }
         }

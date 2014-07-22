@@ -116,5 +116,33 @@ namespace EquationSolver
 
             return m;
         }
+
+        public static ILayer GetBetterChild(ILayer childNow)
+        {
+            ILayer newChild = childNow;
+            if (childNow is AddSubtractLayer)
+            {
+                AddSubtractLayer child = (AddSubtractLayer)childNow;
+                if (child.Additions.Count + child.Subtractions.Count == 1)
+                {
+                    if(child.Additions.Count == 1)
+                    {
+                        newChild = child.Additions[0];
+                    }
+                }
+            }
+            if (childNow is MultiplyDivideLayer)
+            {
+                MultiplyDivideLayer child = (MultiplyDivideLayer)childNow;
+                if (child.Factors.Count + child.Divisors.Count == 1)
+                {
+                    if (child.Factors.Count == 1)
+                    {
+                        newChild = child.Factors[0];
+                    }
+                }
+            }
+            return newChild;
+        }
     }
 }
