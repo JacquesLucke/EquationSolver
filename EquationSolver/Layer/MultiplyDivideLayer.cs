@@ -20,10 +20,12 @@ namespace EquationSolver
         public List<ILayer> Factors
         {
             get { return factors; }
+            set { factors = value; }
         }
         public List<ILayer> Divisors
         {
             get { return divisors; }
+            set { divisors = value; }
         }
 
         public HashSet<char> GetVariables()
