@@ -77,19 +77,9 @@ namespace EquationSolver
         // takes care of brackets
         private Type GetTopLayerType()
         {
-            if (elements.Count == 1)
-            {
-                if (elements[0] is NumberElement) return typeof(NumberLayer);
-                if (elements[0] is EElement) return typeof(NumberLayer);
-                if (elements[0] is PiElement) return typeof(NumberLayer);
-                if (elements[0] is VariableElement) return typeof(VariableLayer);
-            }
+            if (ContainsType(elements, typeof(PlusElement), typeof(MinusElement))) return typeof(AddSubtractLayer);
 
-            bool containsPlusOrMinus =  GetFirstIndexOrCount(elements, typeof(PlusElement), typeof(MinusElement)) != elements.Count;
-            if (containsPlusOrMinus) return typeof(AddSubtractLayer);
-
-            bool containsMultiplyOrDivide = GetFirstIndexOrCount(elements, typeof(MultiplyElement), typeof(DivideElement)) != elements.Count;
-            if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
+            if (ContainsType(elements, typeof(MultiplyElement), typeof(DivideElement))) return typeof(MultiplyDivideLayer);
 
             if (elements.Count > 0)
             {
@@ -101,8 +91,17 @@ namespace EquationSolver
                 if (elements[0] is LbElement) return typeof(LogarithmLayer);
             }
 
-            bool containsPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement)) != elements.Count;
-            if (containsPowerSymbol) return typeof(PowerLayer);
+            if (ContainsType(elements, typeof(PowerElement))) return typeof(PowerLayer);
+
+            if(ContainsType(elements, typeof(ExpElement))) return typeof(MultiplyDivideLayer);
+
+            if (elements.Count == 1)
+            {
+                if (elements[0] is NumberElement) return typeof(NumberLayer);
+                if (elements[0] is EElement) return typeof(NumberLayer);
+                if (elements[0] is PiElement) return typeof(NumberLayer);
+                if (elements[0] is VariableElement) return typeof(VariableLayer);
+            }
 
             throw new CouldNotFindTopLevelLayerType();
         }
@@ -130,11 +129,31 @@ namespace EquationSolver
         private MultiplyDivideLayer ParseMultiplyDivideLayerFromElements()
         {
             MultiplyDivideLayer layer = new MultiplyDivideLayer();
-            List<IElement> els = new List<IElement>(elements);
+            if (ContainsType(elements, typeof(MultiplyElement), typeof(DivideElement)))
+            {
+                List<IElement> els = new List<IElement>(elements);
 
-            while (els.Count > 0)
-                AddFirstToLayerAndDeleteFromList(layer, els);
+                while (els.Count > 0)
+                    AddFirstToLayerAndDeleteFromList(layer, els);
+                return layer;
+            }
+            if(ContainsType(elements, typeof(ExpElement)))
+            {
+                int indexOfExp = GetFirstIndexOrCount(elements, typeof(ExpElement));
 
+                ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(0, indexOfExp));
+                parser.Parse();
+                layer.Factors.Add(parser.TopLayer);
+
+                PowerLayer powerLayer = new PowerLayer();
+                powerLayer.BaseOfPower = new NumberLayer(10);
+
+                parser = new ElementsToLayersParser(elements.GetRange(indexOfExp + 1, elements.Count - indexOfExp - 1));
+                parser.Parse();
+                powerLayer.Exponent = parser.TopLayer;
+                layer.Factors.Add(powerLayer);
+                return layer;
+            }
             return layer;
         }
         private RootLayer ParseRootLayerFromElements()
@@ -152,7 +171,7 @@ namespace EquationSolver
             if (elements[0] is RootElement)
             {
                 elements.RemoveAt(0);
-                int indexOfSecondUnderscore = 1 + GetFirstIndexOfType(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
+                int indexOfSecondUnderscore = 1 + GetFirstIndexOrCount(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
                 if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
                 ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
                 parser.Parse();
@@ -166,9 +185,8 @@ namespace EquationSolver
         }
         private PowerLayer ParsePowerLayerFromElements()
         {
-            int indexOfPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement));
-
             PowerLayer layer = new PowerLayer();
+            int indexOfPowerSymbol = GetFirstIndexOrCount(elements, typeof(PowerElement));
 
             ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(0, indexOfPowerSymbol));
             parser.Parse();
@@ -186,7 +204,7 @@ namespace EquationSolver
             if (elements[1] is UnderscoreElement)
             {
                 elements.RemoveAt(0);
-                int indexOfSecondUnderscore = 1 + GetFirstIndexOfType(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
+                int indexOfSecondUnderscore = 1 + GetFirstIndexOrCount(elements.GetRange(1, elements.Count - 1), typeof(UnderscoreElement));
                 if (indexOfSecondUnderscore == elements.Count || !(elements[0] is UnderscoreElement)) throw new MissingUnderscoreException();
                 ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(1, indexOfSecondUnderscore - 1));
                 parser.Parse();
@@ -241,6 +259,10 @@ namespace EquationSolver
         }
 
         // these methods take care of brackets
+        private bool ContainsType(List<IElement> els, params Type[] search)
+        {
+            return GetFirstIndexOrCount(els, search) != els.Count;
+        }
         private int GetFirstIndexOrCount(List<IElement> els, params Type[] search)
         {
             int index = els.Count;
