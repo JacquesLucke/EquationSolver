@@ -42,6 +42,9 @@ namespace EquationSolver
 
             if (topLayerType == typeof(PowerLayer))
                 topLayer = ParsePowerLayerFromElements();
+
+            if (topLayerType == typeof(LogarithmLayer))
+                topLayer = ParseLogarithmLayerFromElements();
         }
         private void DeleteSurroundingBrackets()
         {
@@ -81,15 +84,16 @@ namespace EquationSolver
             }
 
             bool containsPlusOrMinus =  GetFirstIndexOrCount(elements, typeof(PlusElement), typeof(MinusElement)) != elements.Count;
-            bool containsMultiplyOrDivide = GetFirstIndexOrCount(elements, typeof(MultiplyElement), typeof(DivideElement)) != elements.Count;
-
             if (containsPlusOrMinus) return typeof(AddSubtractLayer);
+
+            bool containsMultiplyOrDivide = GetFirstIndexOrCount(elements, typeof(MultiplyElement), typeof(DivideElement)) != elements.Count;
             if (containsMultiplyOrDivide) return typeof(MultiplyDivideLayer);
 
             if (elements.Count > 0)
             {
                 if (elements[0] is SqrtElement) return typeof(RootLayer);
                 if (elements[0] is RootElement) return typeof(RootLayer);
+                if (elements[0] is LogElement) return typeof(LogarithmLayer);
             }
 
             bool containsPowerSymbol = GetFirstIndexOfType(elements, typeof(PowerElement)) != elements.Count;
@@ -167,6 +171,19 @@ namespace EquationSolver
             parser.Parse();
             layer.Exponent = parser.TopLayer;
 
+            return layer;
+        }
+        private LogarithmLayer ParseLogarithmLayerFromElements()
+        {
+            LogarithmLayer layer = new LogarithmLayer();
+            if(elements[0] is LogElement)
+            {
+                layer.BaseOfLogarithm = new NumberLayer(10);
+                elements.RemoveAt(0);
+                ElementsToLayersParser parser = new ElementsToLayersParser(new List<IElement>(elements));
+                parser.Parse();
+                layer.Number = parser.TopLayer;
+            }
             return layer;
         }
 
