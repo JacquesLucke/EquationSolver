@@ -38,7 +38,13 @@ namespace EquationSolver
             return variables;
         }
         public void StrongSimplification()
-        { }
+        {
+            baseOfPower.StrongSimplification();
+            exponent.StrongSimplification();
+
+            if (!Double.IsNaN(baseOfPower.Calculate(null))) baseOfPower = new NumberLayer(baseOfPower.Calculate(null));
+            if (!Double.IsNaN(exponent.Calculate(null))) exponent = new NumberLayer(exponent.Calculate(null));
+        }
         public void Simplify()
         {
             SimplifyChildren();

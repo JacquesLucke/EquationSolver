@@ -48,18 +48,20 @@ namespace EquationSolver
             NumberLayer newNumber = new NumberLayer(0);
             for (int i = 0; i < additions.Count; i++)
             {
-                if (additions[i] is NumberLayer)
+                if (!Double.IsNaN(additions[i].Calculate(null)))
                 {
                     newNumber.Value += additions[i].Calculate(null);
                     additions.RemoveAt(i);
+                    i--;
                 }
             }
             for (int i = 0; i < subtractions.Count; i++)
             {
-                if (subtractions[i] is NumberLayer)
+                if (!Double.IsNaN(subtractions[i].Calculate(null)))
                 {
                     newNumber.Value -= subtractions[i].Calculate(null);
                     subtractions.RemoveAt(i);
+                    i--;
                 }
             }
             if (newNumber.Value > 0) additions.Add(newNumber);
