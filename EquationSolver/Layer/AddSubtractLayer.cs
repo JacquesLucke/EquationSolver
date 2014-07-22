@@ -44,6 +44,7 @@ namespace EquationSolver
             StrongSimplificationOnChildren();
             CalculateNonVariableTerms();
             CombineMultiplyDivideLayers();
+            StrongSimplificationOnChildren();
         }
         private void StrongSimplificationOnChildren()
         {

@@ -44,6 +44,27 @@ namespace EquationSolver
         public void StrongSimplification()
         {
             CalculateNonVariableTerms();
+            RemoveOnes();
+        }
+        private void RemoveOnes()
+        {
+            for (int i = 0; i < factors.Count; i++)
+            {
+                if (factors[i].Calculate(null) == 1)
+                {
+                    factors.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < divisors.Count; i++)
+            {
+                if (divisors[i].Calculate(null) == 1)
+                {
+                    divisors.RemoveAt(i);
+                    i--;
+                }
+            }
         }
         private void CalculateNonVariableTerms()
         {
@@ -147,6 +168,7 @@ namespace EquationSolver
                 if (divisors[i].NeedsBrackets()) s += "/(" + divisors[i].ToString() + ")";
                 else s += "/" + divisors[i].ToString();
             }
+            if (s == "") s = "1";
             return s;
         }
     }
