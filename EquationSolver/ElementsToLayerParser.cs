@@ -39,6 +39,9 @@ namespace EquationSolver
 
             if (topLayerType == typeof(RootLayer))
                 topLayer = ParseRootLayerFromElements();
+
+            if (topLayerType == typeof(PowerLayer))
+                topLayer = ParsePowerLayerFromElements();
         }
         private void DeleteSurroundingBrackets()
         {
@@ -99,6 +102,19 @@ namespace EquationSolver
                 if (elements[0] is SqrtElement) return typeof(RootLayer);
                 if (elements[0] is RootElement) return typeof(RootLayer);
             }
+
+            bool containsPowerSymbol = false;
+            deepness = 0;
+            foreach (IElement element in elements)
+            {
+                if (element is OpenBracketElement) deepness++;
+                if (element is CloseBracketElement) deepness--;
+                if (deepness == 0)
+                {
+                    if (element is PowerElement) containsPowerSymbol = true;
+                }
+            }
+            if (containsPowerSymbol) return typeof(PowerLayer);
 
             throw new CouldNotFindTopLevelLayerType();
         }
@@ -164,6 +180,32 @@ namespace EquationSolver
                 parser.Parse();
                 layer.BaseOfRoot = parser.TopLayer;
             }
+            return layer;
+        }
+        private PowerLayer ParsePowerLayerFromElements()
+        {
+            int indexOfPowerSymbol = -1;
+            int deepness = 0;
+            for(int i = 0; i<elements.Count; i++)
+            {
+                if (elements[i] is OpenBracketElement) deepness++;
+                if (elements[i] is CloseBracketElement) deepness--;
+                if(elements[i] is PowerElement && deepness == 0)
+                {
+                    indexOfPowerSymbol = i;
+                }
+            }
+
+            PowerLayer layer = new PowerLayer();
+
+            ElementsToLayersParser parser = new ElementsToLayersParser(elements.GetRange(0, indexOfPowerSymbol));
+            parser.Parse();
+            layer.BaseOfPower = parser.TopLayer;
+
+            parser = new ElementsToLayersParser(elements.GetRange(indexOfPowerSymbol + 1, elements.Count - indexOfPowerSymbol - 1));
+            parser.Parse();
+            layer.Exponent = parser.TopLayer;
+
             return layer;
         }
 
