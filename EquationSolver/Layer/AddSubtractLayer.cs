@@ -89,13 +89,13 @@ namespace EquationSolver
 
             for (int i = 0; i < additions.Count; i++)
             {
-                if(additions[i].NeedsBrackets()) s += "(" + additions[i].ToString() + ")";
+                if(additions[i].NeedsBrackets() && additions[i] is AddSubtractLayer) s += "(" + additions[i].ToString() + ")";
                 else s += additions[i].ToString();
                 if (i < additions.Count - 1) s += "+";
             }
             for (int i = 0; i < subtractions.Count; i++)
             {
-                if (subtractions[i].NeedsBrackets()) s += "-(" + subtractions[i].ToString() + ")";
+                if (subtractions[i].NeedsBrackets() && subtractions[i] is AddSubtractLayer) s += "-(" + subtractions[i].ToString() + ")";
                 else s += "-" + subtractions[i].ToString();
             }
             return s;
