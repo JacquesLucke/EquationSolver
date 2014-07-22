@@ -44,6 +44,7 @@ namespace EquationSolver
         public void Parse()
         {
             elements = GetElementsFromString(original);
+            Cleanup();
         }
         private List<IElement> GetElementsFromString(string text)
         {
@@ -123,6 +124,19 @@ namespace EquationSolver
             NumberElement element = new NumberElement(Convert.ToDouble(text.Substring(0, endIndex + 1)));
             text = text.Substring(endIndex + 1);
             return element;
+        }
+        private void Cleanup()
+        {
+            int closeBracketsMissing = 0;
+            foreach(IElement element in elements)
+            {
+                if (element is OpenBracketElement) closeBracketsMissing++;
+                if (element is CloseBracketElement) closeBracketsMissing--;
+            }
+            for(int i = 0; i < closeBracketsMissing; i++)
+            {
+                elements.Add(new CloseBracketElement());
+            }
         }
     }
 
