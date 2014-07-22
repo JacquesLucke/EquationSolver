@@ -171,6 +171,7 @@ namespace EquationSolver
         public void Simplify()
         {
             SimplifyChildren();
+            RemoveZeros();
 
             for (int i = 0; i < additions.Count; i++)
             {
@@ -191,6 +192,26 @@ namespace EquationSolver
                     subtractions.AddRange(layer.additions);
                     additions.AddRange(layer.subtractions);
                     subtractions.Remove(layer);
+                    i--;
+                }
+            }
+        }
+        public void RemoveZeros()
+        {
+            for (int i = 0; i < additions.Count; i++)
+            {
+                if (additions[i].Calculate(null) == 0)
+                {
+                    additions.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < subtractions.Count; i++)
+            {
+                if (subtractions[i].Calculate(null) == 1)
+                {
+                    subtractions.RemoveAt(i);
                     i--;
                 }
             }

@@ -32,8 +32,13 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
-            Simplify();
-            topLayer.StrongSimplification();
+            for (int i = 0; i < 5; i++)
+            {
+                Simplify();
+                topLayer.StrongSimplification();
+                Simplify();
+                topLayer = Layer.GetBetterChild(topLayer);
+            }
         }
         public void Simplify()
         {
@@ -55,7 +60,23 @@ namespace EquationSolver
             newTopLayer.Additions.Add(topLayer);
             newTopLayer.Additions.Add(addition.TopLayer);
 
-            topLayer = newTopLayer;
+            topLayer = Layer.GetBetterChild(newTopLayer);
+        }
+        public void Subtract(Term subtraction)
+        {
+            AddSubtractLayer newTopLayer = new AddSubtractLayer();
+            newTopLayer.Additions.Add(topLayer);
+            newTopLayer.Subtractions.Add(subtraction.TopLayer);
+
+            topLayer = Layer.GetBetterChild(newTopLayer);
+        }
+        public void Multiply(Term factor)
+        {
+            MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+            newTopLayer.Factors.Add(topLayer);
+            newTopLayer.Factors.Add(factor.TopLayer);
+
+            topLayer = Layer.GetBetterChild(newTopLayer);
         }
 
         public override string ToString()
