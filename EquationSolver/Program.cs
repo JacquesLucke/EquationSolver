@@ -15,7 +15,7 @@ namespace EquationSolver
             try
             {
                 Term term = Term.FromString(text);
-                term.Simplify();
+                term.StrongSimplification();
                 Console.WriteLine(term.ToString());
                 HashSet<char> s = term.GetVariables();
                 //Console.WriteLine(term.Calculate());

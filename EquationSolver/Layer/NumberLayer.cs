@@ -17,6 +17,7 @@ namespace EquationSolver
         public double Value
         {
             get { return value; }
+            set { this.value = value; }
         }
 
         public bool NeedsBrackets()

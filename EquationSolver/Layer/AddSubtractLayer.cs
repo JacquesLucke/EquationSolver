@@ -39,7 +39,36 @@ namespace EquationSolver
             return variables;
         }
         public void StrongSimplification()
-        { }
+        {
+            foreach (ILayer layer in additions)
+                layer.StrongSimplification();
+            foreach (ILayer layer in subtractions)
+                layer.StrongSimplification();
+
+            NumberLayer newNumber = new NumberLayer(0);
+            for (int i = 0; i < additions.Count; i++)
+            {
+                if (additions[i] is NumberLayer)
+                {
+                    newNumber.Value += additions[i].Calculate(null);
+                    additions.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < subtractions.Count; i++)
+            {
+                if (subtractions[i] is NumberLayer)
+                {
+                    newNumber.Value -= subtractions[i].Calculate(null);
+                    subtractions.RemoveAt(i);
+                }
+            }
+            if (newNumber.Value > 0) additions.Add(newNumber);
+            if(newNumber.Value < 0)
+            {
+                newNumber.Value = -newNumber.Value;
+                subtractions.Add(newNumber);
+            }
+        }
         public void Simplify()
         {
             SimplifyChildren();

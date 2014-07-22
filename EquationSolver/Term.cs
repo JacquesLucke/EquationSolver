@@ -32,6 +32,7 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
+            Simplify();
             topLayer.StrongSimplification();
         }
         public void Simplify()
