@@ -30,6 +30,10 @@ namespace EquationSolver
             return topLayer.Calculate(variableToNumberDictionary);
         }
 
+        public void StrongSimplification()
+        {
+            topLayer.StrongSimplification();
+        }
         public void Simplify()
         {
             topLayer.Simplify();

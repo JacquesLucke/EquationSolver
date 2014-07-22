@@ -38,6 +38,8 @@ namespace EquationSolver
 
             return variables;
         }
+        public void StrongSimplification()
+        { }
         public void Simplify()
         {
             SimplifyChildren();

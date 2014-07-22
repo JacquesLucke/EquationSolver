@@ -40,6 +40,8 @@ namespace EquationSolver
             variables.Add(name);
             return variables;
         }
+        public void StrongSimplification()
+        { }
         public void Simplify()
         { }
 

@@ -33,6 +33,8 @@ namespace EquationSolver
         {
             return new HashSet<char>();
         }
+        public void StrongSimplification()
+        { }
         public void Simplify()
         { }
 
