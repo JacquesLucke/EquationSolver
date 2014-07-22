@@ -15,13 +15,13 @@ namespace EquationSolver
         {
             try
             {
-                Term term = Term.FromString("1");
+                Term term = Term.FromString("100");
 
                 while (true)
                 {
                     string text = GetInputString("Addition");
                     Term addition = Term.FromString(text);
-                    term.Multiply(addition);
+                    term.Divide(addition);
                     term.StrongSimplification();
                     Console.WriteLine("Simplification: " + term.ToString());
                     HashSet<char> s = term.GetVariables();

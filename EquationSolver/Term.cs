@@ -78,6 +78,14 @@ namespace EquationSolver
 
             topLayer = Layer.GetBetterChild(newTopLayer);
         }
+        public void Divide(Term divisor)
+        {
+            MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+            newTopLayer.Factors.Add(topLayer);
+            newTopLayer.Divisors.Add(divisor.TopLayer);
+
+            topLayer = Layer.GetBetterChild(newTopLayer);
+        }
 
         public override string ToString()
         {

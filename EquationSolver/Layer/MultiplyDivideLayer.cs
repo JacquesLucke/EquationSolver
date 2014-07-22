@@ -48,7 +48,8 @@ namespace EquationSolver
             CalculateNonVariableTerms();
             RemoveOnes();
             LeaveOnlyZeroIfOneFactorIsZero();
-            StrongSimplificationOnChildren();
+            StrongSimplificationOnChildren(); 
+            ReduceDuplicatesInFactorsAndDivisors();
         }
         private void GetBetterChildren()
         {
@@ -123,6 +124,23 @@ namespace EquationSolver
                 factors.Clear();
                 divisors.Clear();
                 factors.Add(new NumberLayer(0));
+            }
+        }
+        private void ReduceDuplicatesInFactorsAndDivisors()
+        {
+            ILayer[] pair = null;
+            for(int i = 0; i <factors.Count; i++)
+            {
+                for(int j = 0; j < divisors.Count; j++)
+                {
+                    if (Layer.Compare(factors[i], divisors[j])) pair = new ILayer[] { factors[i], divisors[j] };
+                }
+            }
+            if(pair != null)
+            {
+                factors.Remove(pair[0]);
+                divisors.Remove(pair[1]);
+                ReduceDuplicatesInFactorsAndDivisors();
             }
         }
 

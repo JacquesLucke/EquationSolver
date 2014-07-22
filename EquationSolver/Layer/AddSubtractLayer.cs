@@ -106,8 +106,8 @@ namespace EquationSolver
             if (equalPairs.Count > 0)
             {
                 CombinePair(equalPairs[0], all);
-                GetBetterChildrenLayers();
                 StrongSimplification();
+                GetBetterChildrenLayers();
             }
         }
         private void RemovePairsInSameLayer(List<MultiplyDivideLayer> layers, List<ILayer[]> pairs)
