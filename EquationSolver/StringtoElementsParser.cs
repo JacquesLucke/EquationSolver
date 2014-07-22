@@ -65,7 +65,7 @@ namespace EquationSolver
         {
             text = text.Replace('.', ',');
             text = text.Replace(" ", "");
-            while(true)
+            while (true)
             {
                 string newText = text.Replace("++", "+");
                 newText = newText.Replace("--", "+");
@@ -105,7 +105,7 @@ namespace EquationSolver
             }
 
             // variables
-            if(Char.IsLetter(text[0]))
+            if (Char.IsLetter(text[0]))
             {
                 VariableElement element = new VariableElement(text[0]);
                 text = text.Substring(1);
@@ -130,12 +130,12 @@ namespace EquationSolver
         private void Cleanup()
         {
             int closeBracketsMissing = 0;
-            foreach(IElement element in elements)
+            foreach (IElement element in elements)
             {
                 if (element is OpenBracketElement) closeBracketsMissing++;
                 if (element is CloseBracketElement) closeBracketsMissing--;
             }
-            for(int i = 0; i < closeBracketsMissing; i++)
+            for (int i = 0; i < closeBracketsMissing; i++)
             {
                 elements.Add(new CloseBracketElement());
             }

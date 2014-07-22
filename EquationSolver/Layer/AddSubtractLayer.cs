@@ -28,9 +28,9 @@ namespace EquationSolver
 
         public void Simplify()
         {
-            for(int i = 0; i < additions.Count; i++)
+            for (int i = 0; i < additions.Count; i++)
             {
-                if(additions[i] is AddSubtractLayer)
+                if (additions[i] is AddSubtractLayer)
                 {
                     AddSubtractLayer layer = (AddSubtractLayer)additions[i];
                     additions.AddRange(layer.additions);
@@ -52,11 +52,11 @@ namespace EquationSolver
         }
         private void SimplifyChildren()
         {
-            foreach(ILayer layer in additions)
+            foreach (ILayer layer in additions)
             {
                 layer.Simplify();
             }
-            foreach(ILayer layer in subtractions)
+            foreach (ILayer layer in subtractions)
             {
                 layer.Simplify();
             }
@@ -89,7 +89,7 @@ namespace EquationSolver
 
             for (int i = 0; i < additions.Count; i++)
             {
-                if(additions[i].NeedsBrackets() && additions[i] is AddSubtractLayer) s += "(" + additions[i].ToString() + ")";
+                if (additions[i].NeedsBrackets() && additions[i] is AddSubtractLayer) s += "(" + additions[i].ToString() + ")";
                 else s += additions[i].ToString();
                 if (i < additions.Count - 1) s += "+";
             }

@@ -37,7 +37,7 @@ namespace EquationSolver
             baseOfPower.Simplify();
             exponent.Simplify();
         }
-        
+
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
         {
             return Math.Pow(baseOfPower.Calculate(variableToNumberDictionary), exponent.Calculate(variableToNumberDictionary));

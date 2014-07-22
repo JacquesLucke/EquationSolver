@@ -52,11 +52,11 @@ namespace EquationSolver
         }
         public void SimplifyChildren()
         {
-            foreach(ILayer layer in factors)
+            foreach (ILayer layer in factors)
             {
                 layer.Simplify();
             }
-            foreach(ILayer layer in divisors)
+            foreach (ILayer layer in divisors)
             {
                 layer.Simplify();
             }

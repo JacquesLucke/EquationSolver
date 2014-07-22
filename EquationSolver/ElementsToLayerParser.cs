@@ -62,7 +62,7 @@ namespace EquationSolver
             int deepness = 0;
             if (elements[0] is OpenBracketElement) deepness = 1;
             else return false;
-            for(int i = 1; i < elements.Count - 1; i++)
+            for (int i = 1; i < elements.Count - 1; i++)
             {
                 if (elements[i] is OpenBracketElement) deepness++;
                 if (elements[i] is CloseBracketElement) deepness--;
@@ -150,7 +150,7 @@ namespace EquationSolver
         private RootLayer ParseRootLayerFromElements()
         {
             RootLayer layer = new RootLayer();
-            if(elements[0] is SqrtElement)
+            if (elements[0] is SqrtElement)
             {
                 layer.NthRoot = new NumberLayer(2);
 
@@ -159,13 +159,13 @@ namespace EquationSolver
                 parser.Parse();
                 layer.BaseOfRoot = parser.TopLayer;
             }
-            if(elements[0] is RootElement)
+            if (elements[0] is RootElement)
             {
                 elements.RemoveAt(0);
                 int indexOfSecondUnderscore = -1;
-                for(int i = 1; i < elements.Count; i++)
+                for (int i = 1; i < elements.Count; i++)
                 {
-                    if(elements[i] is UnderscoreElement)
+                    if (elements[i] is UnderscoreElement)
                     {
                         indexOfSecondUnderscore = i;
                         break;
@@ -186,11 +186,11 @@ namespace EquationSolver
         {
             int indexOfPowerSymbol = -1;
             int deepness = 0;
-            for(int i = 0; i<elements.Count; i++)
+            for (int i = 0; i < elements.Count; i++)
             {
                 if (elements[i] is OpenBracketElement) deepness++;
                 if (elements[i] is CloseBracketElement) deepness--;
-                if(elements[i] is PowerElement && deepness == 0)
+                if (elements[i] is PowerElement && deepness == 0)
                 {
                     indexOfPowerSymbol = i;
                 }

@@ -29,7 +29,7 @@ namespace EquationSolver
         {
             double value = Double.NaN;
             if (variableToNumberDictionary != null)
-                if (variableToNumberDictionary.ContainsKey(name)) 
+                if (variableToNumberDictionary.ContainsKey(name))
                     value = variableToNumberDictionary[name];
             return value;
         }
