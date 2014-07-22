@@ -42,6 +42,7 @@ namespace EquationSolver
         public void StrongSimplification()
         {
             CalculateNonVariableTerms();
+            CombineMultiplyDivideLayers();
         }
         private void CalculateNonVariableTerms()
         {
@@ -75,6 +76,100 @@ namespace EquationSolver
                 newNumber.Value = -newNumber.Value;
                 subtractions.Add(newNumber);
             }
+        }
+        private List<MultiplyDivideLayer> GetAllMultiplyDivideLayers()
+        {
+            List<MultiplyDivideLayer> layers = new List<MultiplyDivideLayer>();
+            foreach (ILayer layer in additions)
+                if (layer is MultiplyDivideLayer) layers.Add((MultiplyDivideLayer)layer);
+            foreach (ILayer layer in subtractions)
+                if (layer is MultiplyDivideLayer) layers.Add((MultiplyDivideLayer)layer);
+            return layers;
+        }
+        private void CombineMultiplyDivideLayers()
+        {
+            List<MultiplyDivideLayer> all = GetAllMultiplyDivideLayers();
+
+            List<ILayer> subAll = new List<ILayer>();
+            foreach (ILayer layer in all)
+            {
+                if (layer is MultiplyDivideLayer)
+                {
+                    MultiplyDivideLayer l = (MultiplyDivideLayer)layer;
+                    subAll.AddRange(l.Factors);
+                }
+            }
+            List<KeyValuePair<ILayer, ILayer>> pairs = new List<KeyValuePair<ILayer, ILayer>>();
+            for (int i = 0; i < subAll.Count - 1; i++)
+            {
+                for (int j = i + 1; j < subAll.Count; j++)
+                {
+                    if (Layer.Compare(subAll[i], subAll[j]))
+                    {
+                        pairs.Add(new KeyValuePair<ILayer, ILayer>(subAll[i], subAll[j]));
+                    }
+                }
+            }
+
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                for (int j = 0; j < all.Count; j++)
+                {
+                    if (all[j].Factors.Contains(pairs[i].Key) && all[j].Factors.Contains(pairs[i].Value) || pairs[i].Key.GetVariables().Count == 0)
+                    {
+                        pairs.RemoveAt(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+
+            if (pairs.Count > 0)
+            {
+                KeyValuePair<ILayer, ILayer> pair = pairs[0];
+                KeyValuePair<MultiplyDivideLayer, MultiplyDivideLayer> parents;
+                parents = new KeyValuePair<MultiplyDivideLayer, MultiplyDivideLayer>(FindParentLayer(pair.Key, all), FindParentLayer(pair.Value, all));
+
+                MultiplyDivideLayer newLayer = new MultiplyDivideLayer();
+                newLayer.Factors.Add(pair.Key);
+                AddSubtractLayer layerPart = new AddSubtractLayer();
+
+                MultiplyDivideLayer l1 = new MultiplyDivideLayer();
+                foreach (ILayer layer in parents.Key.Factors)
+                    if (layer != pair.Key) l1.Factors.Add(layer);
+                foreach (ILayer layer in parents.Key.Divisors)
+                    if (layer != pair.Key) l1.Divisors.Add(layer);
+
+                MultiplyDivideLayer l2 = new MultiplyDivideLayer();
+                foreach (ILayer layer in parents.Value.Factors)
+                    if (layer != pair.Value) l2.Factors.Add(layer);
+                foreach (ILayer layer in parents.Value.Divisors)
+                    if (layer != pair.Value) l2.Divisors.Add(layer);
+
+                if (additions.Contains(parents.Key)) layerPart.Additions.Add(l1);
+                else layerPart.Subtractions.Add(l1);
+                if (additions.Contains(parents.Value)) layerPart.Additions.Add(l2);
+                else layerPart.Subtractions.Add(l2);
+
+                newLayer.Factors.Add(layerPart);
+
+                if (additions.Contains(parents.Key)) additions.Remove(parents.Key);
+                if (additions.Contains(parents.Value)) additions.Remove(parents.Value);
+                if (subtractions.Contains(parents.Key)) subtractions.Remove(parents.Key);
+                if (subtractions.Contains(parents.Value)) subtractions.Remove(parents.Value);
+
+                additions.Add(newLayer);
+
+                StrongSimplification();
+            }
+        }
+        private MultiplyDivideLayer FindParentLayer(ILayer child, List<MultiplyDivideLayer> possibleParents)
+        {
+            foreach(MultiplyDivideLayer layer in possibleParents)
+            {
+                if (layer.Factors.Contains(child)) return layer;
+            }
+            return null;
         }
 
         public void Simplify()

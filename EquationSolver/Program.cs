@@ -9,6 +9,8 @@ namespace EquationSolver
 {
     class Program
     {
+        public static Random Random = new Random();
+
         static void Main(string[] args)
         {
             string text = GetInputString();

@@ -60,6 +60,7 @@
     <Compile Include="Elements\UnderscoreElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
     <Compile Include="ElementsToLayerParser.cs" />
+    <Compile Include="Layer.cs" />
     <Compile Include="Layer\LogarithmLayer.cs" />
     <Compile Include="Layer\MultiplyDivideLayer.cs" />
     <Compile Include="Layer\AddSubtractLayer.cs" />
