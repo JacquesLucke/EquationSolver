@@ -16,9 +16,9 @@ namespace EquationSolver
             {
                 Term term = Term.FromString(text);
                 term.StrongSimplification();
-                Console.WriteLine(term.ToString());
+                Console.WriteLine("Simplification: " + term.ToString());
                 HashSet<char> s = term.GetVariables();
-                //Console.WriteLine(term.Calculate());
+                if (s.Count == 0) Console.WriteLine("Result: "+ term.Calculate());
                 Console.ReadLine();
             }
             catch (ParseStringException e)
