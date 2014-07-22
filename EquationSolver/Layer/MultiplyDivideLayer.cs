@@ -45,26 +45,7 @@ namespace EquationSolver
         {
             CalculateNonVariableTerms();
             RemoveOnes();
-        }
-        private void RemoveOnes()
-        {
-            for (int i = 0; i < factors.Count; i++)
-            {
-                if (factors[i].Calculate(null) == 1)
-                {
-                    factors.RemoveAt(i);
-                    i--;
-                }
-            }
-
-            for (int i = 0; i < divisors.Count; i++)
-            {
-                if (divisors[i].Calculate(null) == 1)
-                {
-                    divisors.RemoveAt(i);
-                    i--;
-                }
-            }
+            LeaveOnlyZeroIfOneFactorIsZero();
         }
         private void CalculateNonVariableTerms()
         {
@@ -93,6 +74,39 @@ namespace EquationSolver
                 }
             }
             if(newNumber.Value != 1) factors.Add(newNumber);
+        }
+        private void RemoveOnes()
+        {
+            for (int i = 0; i < factors.Count; i++)
+            {
+                if (factors[i].Calculate(null) == 1)
+                {
+                    factors.RemoveAt(i);
+                    i--;
+                }
+            }
+
+            for (int i = 0; i < divisors.Count; i++)
+            {
+                if (divisors[i].Calculate(null) == 1)
+                {
+                    divisors.RemoveAt(i);
+                    i--;
+                }
+            }
+        }
+        private void LeaveOnlyZeroIfOneFactorIsZero()
+        {
+            bool isZero = false;
+            foreach (ILayer layer in factors)
+                if (layer.Calculate(null) == 0) isZero = true;
+
+            if(isZero)
+            {
+                factors.Clear();
+                divisors.Clear();
+                factors.Add(new NumberLayer(0));
+            }
         }
 
         public void Simplify()
