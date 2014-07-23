@@ -94,6 +94,7 @@ namespace EquationSolver
                 while (DoSuggestedModification(variable))
                 { Simplify(); }
             }
+            Simplify();
         }
         private bool IsReady(char variable)
         {
