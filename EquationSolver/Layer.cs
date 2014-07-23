@@ -144,5 +144,51 @@ namespace EquationSolver
             }
             return newChild;
         }
+
+        public static ILayer MultiplyOut(MultiplyDivideLayer original)
+        {
+            AddSubtractLayer multiplyOutLayer = null;
+            for (int i = 0; i < original.Factors.Count; i++)
+            {
+                if(original.Factors[i] is AddSubtractLayer)
+                {
+                    AddSubtractLayer layer = (AddSubtractLayer)original.Factors[i];
+                    if (layer.Additions.Count + layer.Subtractions.Count > 1)
+                    {
+                        multiplyOutLayer = layer;
+                        break;
+                    }
+                }
+            }
+
+            if (multiplyOutLayer != null)
+            {
+                MultiplyDivideLayer m = new MultiplyDivideLayer();
+                m.Factors.AddRange(original.Factors);
+                m.Divisors.AddRange(original.Divisors);
+                m.Factors.Remove(multiplyOutLayer);
+                m.Divisors.Remove(multiplyOutLayer);
+
+                AddSubtractLayer newLayer = new AddSubtractLayer();
+                foreach(ILayer layer in multiplyOutLayer.Additions)
+                {
+                    MultiplyDivideLayer part = new MultiplyDivideLayer();
+                    part.Factors.Add(layer);
+                    part.Factors.AddRange(m.Factors);
+                    part.Divisors.AddRange(m.Divisors);
+                    newLayer.Additions.Add(part);
+                }
+                foreach (ILayer layer in multiplyOutLayer.Subtractions)
+                {
+                    MultiplyDivideLayer part = new MultiplyDivideLayer();
+                    part.Factors.Add(layer);
+                    part.Factors.AddRange(m.Factors);
+                    part.Divisors.AddRange(m.Divisors);
+                    newLayer.Subtractions.Add(part);
+                }
+                return newLayer;
+            }
+            else return original;
+        }
     }
 }

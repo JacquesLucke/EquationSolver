@@ -50,6 +50,10 @@ namespace EquationSolver
         {
             topLayer.Simplify();
         }
+        public void CalculateNonVariableLayers()
+        {
+            topLayer.CalculateNonVariableLayers();
+        }
         public HashSet<char> GetVariables()
         {
             return topLayer.GetVariables();
@@ -76,35 +80,51 @@ namespace EquationSolver
         }
         public void Add(Term addition)
         {
-            AddSubtractLayer newTopLayer = new AddSubtractLayer();
-            newTopLayer.Additions.Add(topLayer);
-            newTopLayer.Additions.Add(addition.TopLayer);
+            if (topLayer is AddSubtractLayer) ((AddSubtractLayer)topLayer).Additions.Add(addition.TopLayer);
+            else
+            {
+                AddSubtractLayer newTopLayer = new AddSubtractLayer();
+                newTopLayer.Additions.Add(topLayer);
+                newTopLayer.Additions.Add(addition.TopLayer);
 
-            topLayer = Layer.GetBetterChild(newTopLayer);
+                topLayer = Layer.GetBetterChild(newTopLayer);
+            }
         }
         public void Subtract(Term subtraction)
         {
-            AddSubtractLayer newTopLayer = new AddSubtractLayer();
-            newTopLayer.Additions.Add(topLayer);
-            newTopLayer.Subtractions.Add(subtraction.TopLayer);
+            if (topLayer is AddSubtractLayer) ((AddSubtractLayer)topLayer).Subtractions.Add(subtraction.TopLayer);
+            else
+            {
+                AddSubtractLayer newTopLayer = new AddSubtractLayer();
+                newTopLayer.Additions.Add(topLayer);
+                newTopLayer.Subtractions.Add(subtraction.TopLayer);
 
-            topLayer = Layer.GetBetterChild(newTopLayer);
+                topLayer = Layer.GetBetterChild(newTopLayer);
+            }
         }
         public void Multiply(Term factor)
         {
-            MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
-            newTopLayer.Factors.Add(topLayer);
-            newTopLayer.Factors.Add(factor.TopLayer);
+            if (topLayer is MultiplyDivideLayer) ((MultiplyDivideLayer)topLayer).Factors.Add(factor.TopLayer);
+            else
+            {
+                MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+                newTopLayer.Factors.Add(topLayer);
+                newTopLayer.Factors.Add(factor.TopLayer);
 
-            topLayer = Layer.GetBetterChild(newTopLayer);
+                topLayer = Layer.GetBetterChild(newTopLayer);
+            }
         }
         public void Divide(Term divisor)
         {
-            MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
-            newTopLayer.Factors.Add(topLayer);
-            newTopLayer.Divisors.Add(divisor.TopLayer);
+            if (topLayer is MultiplyDivideLayer) ((MultiplyDivideLayer)topLayer).Divisors.Add(divisor.TopLayer);
+            else
+            {
+                MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+                newTopLayer.Factors.Add(topLayer);
+                newTopLayer.Divisors.Add(divisor.TopLayer);
 
-            topLayer = Layer.GetBetterChild(newTopLayer);
+                topLayer = Layer.GetBetterChild(newTopLayer);
+            }
         }
 
         public override string ToString()

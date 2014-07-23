@@ -42,6 +42,8 @@ namespace EquationSolver
         }
         public void StrongSimplification()
         { }
+        public void CalculateNonVariableLayers()
+        { }
         public void Simplify()
         { }
 

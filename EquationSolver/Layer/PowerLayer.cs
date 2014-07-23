@@ -39,15 +39,21 @@ namespace EquationSolver
         }
         public void StrongSimplification()
         {
-            CalculateNonVariableTerms();
-        }
-        public void CalculateNonVariableTerms()
-        {
             baseOfPower.StrongSimplification();
             exponent.StrongSimplification();
+            CalculateNonVariableLayers();
+        }
+        public void CalculateNonVariableLayers()
+        {
+            CalculateChildren();
 
             if (!Double.IsNaN(baseOfPower.Calculate(null))) baseOfPower = new NumberLayer(baseOfPower.Calculate(null));
             if (!Double.IsNaN(exponent.Calculate(null))) exponent = new NumberLayer(exponent.Calculate(null));
+        }
+        private void CalculateChildren()
+        {
+            baseOfPower.CalculateNonVariableLayers();
+            exponent.CalculateNonVariableLayers();
         }
 
         public void Simplify()

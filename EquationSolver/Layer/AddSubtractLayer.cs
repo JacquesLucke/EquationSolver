@@ -41,7 +41,7 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
-            CalculateNonVariableTerms();
+            CalculateNonVariableLayers();
             StrongSimplificationOnChildren();
             CombineMultiplyDivideLayers();
             StrongSimplificationOnChildren();
@@ -54,8 +54,11 @@ namespace EquationSolver
             foreach (ILayer layer in subtractions)
                 layer.StrongSimplification();
         }
-        private void CalculateNonVariableTerms()
+
+        public void CalculateNonVariableLayers()
         {
+            CalculateChildren();
+
             NumberLayer newNumber = new NumberLayer(0);
             for (int i = 0; i < additions.Count; i++)
             {
@@ -81,6 +84,13 @@ namespace EquationSolver
                 newNumber.Value = -newNumber.Value;
                 subtractions.Add(newNumber);
             }
+        }
+        private void CalculateChildren()
+        {
+            foreach (ILayer layer in additions)
+                layer.CalculateNonVariableLayers();
+            foreach (ILayer layer in subtractions)
+                layer.CalculateNonVariableLayers();
         }
         private void GetBetterChildrenLayers()
         {

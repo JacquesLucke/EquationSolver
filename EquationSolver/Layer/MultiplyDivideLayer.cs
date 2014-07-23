@@ -45,7 +45,7 @@ namespace EquationSolver
         {
             StrongSimplificationOnChildren();
             GetBetterChildren();
-            CalculateNonVariableTerms();
+            CalculateNonVariableLayers();
             RemoveOnes();
             LeaveOnlyZeroIfOneFactorIsZero();
             StrongSimplificationOnChildren(); 
@@ -65,12 +65,9 @@ namespace EquationSolver
             foreach (ILayer layer in divisors)
                 layer.StrongSimplification();
         }
-        private void CalculateNonVariableTerms()
+        public void CalculateNonVariableLayers()
         {
-            foreach (ILayer layer in factors)
-                layer.StrongSimplification();
-            foreach (ILayer layer in divisors)
-                layer.StrongSimplification();
+            CalculateChildren();
 
             NumberLayer newNumber = new NumberLayer(1);
             for (int i = 0; i < factors.Count; i++)
@@ -92,6 +89,13 @@ namespace EquationSolver
                 }
             }
             if(newNumber.Value != 1) factors.Add(newNumber);
+        }
+        private void CalculateChildren()
+        {
+            foreach (ILayer layer in factors)
+                layer.CalculateNonVariableLayers();
+            foreach (ILayer layer in divisors)
+                layer.CalculateNonVariableLayers();
         }
         private void RemoveOnes()
         {

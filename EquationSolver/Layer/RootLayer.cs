@@ -45,15 +45,21 @@ namespace EquationSolver
 
         public void StrongSimplification()
         {
-            CalculateNonVariableTerms();
-        }
-        private void CalculateNonVariableTerms()
-        {
             nthRoot.StrongSimplification();
             baseOfRoot.StrongSimplification();
+            CalculateNonVariableLayers();
+        }
+        public void CalculateNonVariableLayers()
+        {
+            CalculateChildren();
 
             if (!Double.IsNaN(nthRoot.Calculate(null))) nthRoot = new NumberLayer(nthRoot.Calculate(null));
             if (!Double.IsNaN(baseOfRoot.Calculate(null))) baseOfRoot = new NumberLayer(baseOfRoot.Calculate(null));
+        }
+        private void CalculateChildren()
+        {
+            nthRoot.CalculateNonVariableLayers();
+            baseOfRoot.CalculateNonVariableLayers();
         }
 
         public void Simplify()
