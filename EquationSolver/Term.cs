@@ -20,6 +20,12 @@ namespace EquationSolver
             parser.Parse();
             return new Term(parser.TopLayer);
         }
+        public static Term FromElements(List<IElement> elements)
+        {
+            ElementsToLayersParser parser = new ElementsToLayersParser(elements);
+            parser.Parse();
+            return new Term(parser.TopLayer);
+        }
 
         public double Calculate()
         {
@@ -54,6 +60,20 @@ namespace EquationSolver
             get { return topLayer; }
         }
 
+        public void Modify(string modification)
+        {
+            StringtoElementsParser stringParser = new StringtoElementsParser(modification);
+            stringParser.Parse();
+            List<IElement> elements = stringParser.Elements;
+            IElement operation = elements[0];
+            elements.RemoveAt(0);
+            Term term = Term.FromElements(elements);
+
+            if (operation is PlusElement) Add(term);
+            if (operation is MinusElement) Subtract(term);
+            if (operation is MultiplyElement) Multiply(term);
+            if (operation is DivideElement) Divide(term);
+        }
         public void Add(Term addition)
         {
             AddSubtractLayer newTopLayer = new AddSubtractLayer();

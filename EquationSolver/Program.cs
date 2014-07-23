@@ -19,9 +19,8 @@ namespace EquationSolver
 
                 while (true)
                 {
-                    string text = GetInputString("Addition");
-                    Term addition = Term.FromString(text);
-                    term.Divide(addition);
+                    string text = GetInputString("Modificition");
+                    term.Modify(text);
                     term.StrongSimplification();
                     Console.WriteLine("Simplification: " + term.ToString());
                     HashSet<char> s = term.GetVariables();
