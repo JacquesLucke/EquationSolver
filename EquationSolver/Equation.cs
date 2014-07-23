@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace EquationSolver
 {
+    public delegate void Modification(Term term);
     public class Equation
     {
         Term[] terms;
@@ -69,43 +70,96 @@ namespace EquationSolver
                 terms[i].Divide(divisor);
         }
 
-        public void DoModification()
+        public void RearrangeToVariable(char variable)
         {
+            while (terms[0].ToString() != Convert.ToString(variable) || terms[0].ToString() == "")
+            {
+                if (terms[0].TopLayer is AddSubtractLayer) ((AddSubtractLayer)terms[0].TopLayer).MultiplyChildrenOut();
+                Simplify();
+                while (DoSuggestedModification(variable))
+                { }
+
+                if (terms[0].TopLayer is AddSubtractLayer) ((AddSubtractLayer)terms[0].TopLayer).CombineMultiplyDivideLayers();
+                Simplify();
+                while (DoSuggestedModification(variable))
+                { }
+            }
+        }
+        public bool DoSuggestedModification(char variable)
+        {
+            Modification modification;
+            Term term;
+            SuggestNextModification(out modification, out term, variable);
+            if (modification != null && term != null)
+            {
+                DoModification(modification, term);
+                return true;
+            }
+            return false;
+        }
+        public void DoModification(Modification modification, Term term)
+        {
+            modification(term);
+            Simplify();
+        }
+        public void SuggestNextModification(out Modification modification, out Term changeTerm, char variable)
+        {
+            modification = null;
+            changeTerm = null;
+
             for (int i = 0; i < 2; i++)
             {
                 Term term = terms[i];
                 if (term.TopLayer is AddSubtractLayer)
                 {
                     AddSubtractLayer layer = (AddSubtractLayer)term.TopLayer;
-                    bool didChange = false;
                     foreach (ILayer l in layer.Additions)
                     {
-                        if (Layer.ContainsVariables(l))
+                        if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            if (i == 1) { Subtract(new Term(l)); didChange = true; }
-                        }
-                        else
-                        {
-                            if (i == 0) { Subtract(new Term(l)); didChange = true; }
+                            modification = Subtract;
+                            changeTerm = new Term(l);
+                            return;
                         }
                     }
-                    if (!didChange)
+                    foreach (ILayer l in layer.Subtractions)
                     {
-                        foreach (ILayer l in layer.Subtractions)
+                        if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            if (Layer.ContainsVariables(l))
-                            {
-                                if (i == 1) Add(new Term(l));
-                            }
-                            else
-                            {
-                                if (i == 0) Add(new Term(l));
-                            }
+                            modification = Add;
+                            changeTerm = new Term(l);
+                            return;
                         }
                     }
                 }
             }
-            Simplify();
+
+            for (int i = 0; i < 2; i++)
+            {
+                Term term = terms[i];
+                if (term.TopLayer is MultiplyDivideLayer)
+                {
+                    MultiplyDivideLayer layer = (MultiplyDivideLayer)term.TopLayer;
+                    foreach (ILayer l in layer.Factors)
+                    {
+                        if (l.GetVariables().Contains(variable) ^ i == 0)
+                        {
+                            modification = Divide;
+                            changeTerm = new Term(l);
+                            return;
+                        }
+                    }
+                    foreach (ILayer l in layer.Divisors)
+                    {
+                        if (l.GetVariables().Contains(variable) ^ i == 0)
+                        {
+                            modification = Multiply;
+                            changeTerm = new Term(l);
+                            return;
+                        }
+                    }
+                }
+            }
         }
 
         public void Simplify()

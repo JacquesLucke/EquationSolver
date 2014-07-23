@@ -15,33 +15,13 @@ namespace EquationSolver
         {
             try
             {
-                Equation equation = Equation.FromString("3+x-7+x=5+5+x+x+x+x");
-                equation.DoModification();
-                equation.DoModification();
-                equation.DoModification();
-                Console.WriteLine(equation);
-
                 while (true)
                 {
-                    string text = GetInputString("Modification");
-                    equation.Modify(text);
-                    equation.Simplify();
+                    Equation equation = Equation.FromString(GetInputString("Equation"));
+                    equation.RearrangeToVariable('x');
                     Console.WriteLine(equation);
                     Console.WriteLine();
                 }
-
-                //Term term = Term.FromString("100");
-
-                //while (true)
-                //{
-                //    string text = GetInputString("Modificition");
-                //    term.Modify(text);
-                //    term.Simplify();
-                //    Console.WriteLine("Simplification: " + term.ToString());
-                //    HashSet<char> s = term.GetVariables();
-                //    if (s.Count == 0) Console.WriteLine("Result: " + term.Calculate());
-                //    Console.WriteLine();
-                //}
             }
             catch (ParseStringException e)
             {

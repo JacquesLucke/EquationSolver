@@ -163,6 +163,14 @@ namespace EquationSolver
             }
         }
 
+        public void MultiplyChildrenOut()
+        {
+            for(int i = 0; i < additions.Count; i++)
+                if (additions[i] is MultiplyDivideLayer) additions[i] = Layer.MultiplyOut((MultiplyDivideLayer)additions[i]);
+            for (int i = 0; i < subtractions.Count; i++)
+                if (subtractions[i] is MultiplyDivideLayer) subtractions[i] = Layer.MultiplyOut((MultiplyDivideLayer)subtractions[i]);
+        }
+
         public void CombineMultiplyDivideLayers()
         {
             Layer.ReplaceLayersWithMultiplyLayers(additions);
