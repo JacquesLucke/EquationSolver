@@ -208,5 +208,17 @@ namespace EquationSolver
             }
             return false;
         }
+        public static bool IsOnlyDivision(ILayer layer)
+        {
+            if (layer is MultiplyDivideLayer)
+            {
+                MultiplyDivideLayer l = (MultiplyDivideLayer)layer;
+                if (l.Factors.Count == 0 && l.Divisors.Count == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

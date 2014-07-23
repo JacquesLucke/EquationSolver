@@ -74,6 +74,11 @@ namespace EquationSolver
             for (int i = 0; i < 2; i++)
                 terms[i].Invert();
         }
+        public void Reciproke()
+        {
+            for (int i = 0; i < 2; i++)
+                terms[i].Reciproke();
+        }
 
         public void RearrangeToVariable(char variable)
         {
@@ -98,12 +103,14 @@ namespace EquationSolver
 
             return false;
         }
+
         public bool DoSuggestedModification(char variable)
         {
             List<TermChange> possibleChanges = new List<TermChange>();
             possibleChanges.Add(MoveAdditionsAndSubtractions);
             possibleChanges.Add(MoveFactorsAndDivisors);
             possibleChanges.Add(InvertIfOnlySubtraction);
+            possibleChanges.Add(ReciprokeIfOnlyDivision);
 
             foreach(TermChange change in possibleChanges)
             {
@@ -172,6 +179,15 @@ namespace EquationSolver
             if (Layer.IsOnlySubtraction(terms[0].TopLayer))
             {
                 Invert();
+                return true;
+            }
+            return false;
+        }
+        private bool ReciprokeIfOnlyDivision(char variable)
+        {
+            if (Layer.IsOnlyDivision(terms[0].TopLayer))
+            {
+                Reciproke();
                 return true;
             }
             return false;

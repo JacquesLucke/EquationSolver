@@ -141,6 +141,27 @@ namespace EquationSolver
                 topLayer = newTopLayer;
             }
         }
+        public void Reciproke()
+        {
+            if (topLayer is MultiplyDivideLayer)
+            {
+                MultiplyDivideLayer layer = (MultiplyDivideLayer)topLayer;
+                List<ILayer> factors = new List<ILayer>(layer.Factors);
+                List<ILayer> divisors = new List<ILayer>(layer.Divisors);
+                layer.Factors.Clear();
+                layer.Factors.AddRange(divisors);
+                layer.Divisors.Clear();
+                layer.Divisors.AddRange(factors);
+            }
+            
+            else
+            {
+                MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+                newTopLayer.Factors.Add(new NumberLayer(1));
+                newTopLayer.Factors.Add(topLayer);
+                topLayer = newTopLayer;
+            }
+        }
 
         public override string ToString()
         {
