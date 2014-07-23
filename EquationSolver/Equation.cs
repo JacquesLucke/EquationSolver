@@ -95,10 +95,11 @@ namespace EquationSolver
             List<TermChange> possibleChanges = new List<TermChange>();
             possibleChanges.Add(MoveAdditionsAndSubtractions);
             possibleChanges.Add(MoveFactorsAndDivisors);
+            possibleChanges.Add(InvertIfOnlySubtraction);
 
             foreach(TermChange change in possibleChanges)
             {
-                if (change(variable)) break;
+                if (change(variable)) return true;
             }
             return false;
         }
@@ -154,6 +155,19 @@ namespace EquationSolver
                             return true;
                         }
                     }
+                }
+            }
+            return false;
+        }
+        private bool InvertIfOnlySubtraction(char variable)
+        {
+            if(terms[0].TopLayer is AddSubtractLayer)
+            {
+                AddSubtractLayer layer = (AddSubtractLayer)terms[0].TopLayer;
+                if (layer.Additions.Count == 0 && layer.Subtractions.Count == 1)
+                {
+                    Invert();
+                    return true;
                 }
             }
             return false;
