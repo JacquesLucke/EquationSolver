@@ -195,5 +195,18 @@ namespace EquationSolver
         {
             return layer.GetVariables().Count != 0;
         }
+
+        public static bool IsOnlySubtraction(ILayer layer)
+        {
+            if(layer is AddSubtractLayer)
+            {
+                AddSubtractLayer l = (AddSubtractLayer)layer;
+                if (l.Additions.Count == 0 && l.Subtractions.Count == 1)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

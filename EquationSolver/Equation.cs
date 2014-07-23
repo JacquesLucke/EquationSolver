@@ -82,12 +82,12 @@ namespace EquationSolver
                 if (terms[0].TopLayer is AddSubtractLayer) ((AddSubtractLayer)terms[0].TopLayer).MultiplyChildrenOut();
                 Simplify();
                 while (DoSuggestedModification(variable))
-                { }
+                { Simplify(); }
 
                 if (terms[0].TopLayer is AddSubtractLayer) ((AddSubtractLayer)terms[0].TopLayer).CombineMultiplyDivideLayers();
                 Simplify();
                 while (DoSuggestedModification(variable))
-                { }
+                { Simplify(); }
             }
         }
         public bool DoSuggestedModification(char variable)
@@ -161,14 +161,10 @@ namespace EquationSolver
         }
         private bool InvertIfOnlySubtraction(char variable)
         {
-            if(terms[0].TopLayer is AddSubtractLayer)
+            if (Layer.IsOnlySubtraction(terms[0].TopLayer))
             {
-                AddSubtractLayer layer = (AddSubtractLayer)terms[0].TopLayer;
-                if (layer.Additions.Count == 0 && layer.Subtractions.Count == 1)
-                {
-                    Invert();
-                    return true;
-                }
+                Invert();
+                return true;
             }
             return false;
         }
