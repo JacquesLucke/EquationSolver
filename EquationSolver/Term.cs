@@ -36,16 +36,6 @@ namespace EquationSolver
             return topLayer.Calculate(variableToNumberDictionary);
         }
 
-        public void StrongSimplification()
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                Simplify();
-                topLayer.StrongSimplification();
-                Simplify();
-                topLayer = Layer.GetBetterChild(topLayer);
-            }
-        }
         public void Simplify()
         {
             topLayer.Simplify();

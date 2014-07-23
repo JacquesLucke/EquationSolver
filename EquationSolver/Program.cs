@@ -21,7 +21,7 @@ namespace EquationSolver
                 {
                     string text = GetInputString("Modificition");
                     term.Modify(text);
-                    term.StrongSimplification();
+                    term.Simplify();
                     Console.WriteLine("Simplification: " + term.ToString());
                     HashSet<char> s = term.GetVariables();
                     if (s.Count == 0) Console.WriteLine("Result: " + term.Calculate());

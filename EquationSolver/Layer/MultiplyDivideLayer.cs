@@ -41,29 +41,12 @@ namespace EquationSolver
             return variables;
         }
 
-        public void StrongSimplification()
-        {
-            StrongSimplificationOnChildren();
-            GetBetterChildren();
-            CalculateNonVariableLayers();
-            RemoveOnes();
-            LeaveOnlyZeroIfOneFactorIsZero();
-            StrongSimplificationOnChildren(); 
-            ReduceDuplicatesInFactorsAndDivisors();
-        }
         private void GetBetterChildren()
         {
             for (int i = 0; i < factors.Count; i++)
                 factors[i] = Layer.GetBetterChild(factors[i]);
             for (int i = 0; i < divisors.Count; i++)
                 divisors[i] = Layer.GetBetterChild(divisors[i]);
-        }
-        private void StrongSimplificationOnChildren()
-        {
-            foreach (ILayer layer in factors)
-                layer.StrongSimplification();
-            foreach (ILayer layer in divisors)
-                layer.StrongSimplification();
         }
         public void CalculateNonVariableLayers()
         {
@@ -151,6 +134,11 @@ namespace EquationSolver
         public void Simplify()
         {
             SimplifyChildren();
+            GetBetterChildren();
+            CalculateNonVariableLayers();
+            RemoveOnes();
+            LeaveOnlyZeroIfOneFactorIsZero();
+            ReduceDuplicatesInFactorsAndDivisors();
 
             for (int i = 0; i < factors.Count; i++)
             {

@@ -13,7 +13,6 @@ namespace EquationSolver
 
         HashSet<char> GetVariables();
         void Simplify();
-        void StrongSimplification();
         void CalculateNonVariableLayers();
     }
 }

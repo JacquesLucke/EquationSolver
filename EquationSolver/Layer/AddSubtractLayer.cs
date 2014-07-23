@@ -39,68 +39,7 @@ namespace EquationSolver
             return variables;
         }
 
-        public void StrongSimplification()
-        {
-            CalculateNonVariableLayers();
-            StrongSimplificationOnChildren();
-            CombineMultiplyDivideLayers();
-            StrongSimplificationOnChildren();
-            GetBetterChildrenLayers();
-        }
-        private void StrongSimplificationOnChildren()
-        {
-            foreach (ILayer layer in additions)
-                layer.StrongSimplification();
-            foreach (ILayer layer in subtractions)
-                layer.StrongSimplification();
-        }
-
-        public void CalculateNonVariableLayers()
-        {
-            CalculateChildren();
-
-            NumberLayer newNumber = new NumberLayer(0);
-            for (int i = 0; i < additions.Count; i++)
-            {
-                if (!Double.IsNaN(additions[i].Calculate(null)))
-                {
-                    newNumber.Value += additions[i].Calculate(null);
-                    additions.RemoveAt(i);
-                    i--;
-                }
-            }
-            for (int i = 0; i < subtractions.Count; i++)
-            {
-                if (!Double.IsNaN(subtractions[i].Calculate(null)))
-                {
-                    newNumber.Value -= subtractions[i].Calculate(null);
-                    subtractions.RemoveAt(i);
-                    i--;
-                }
-            }
-            if (newNumber.Value > 0) additions.Add(newNumber);
-            if (newNumber.Value < 0)
-            {
-                newNumber.Value = -newNumber.Value;
-                subtractions.Add(newNumber);
-            }
-        }
-        private void CalculateChildren()
-        {
-            foreach (ILayer layer in additions)
-                layer.CalculateNonVariableLayers();
-            foreach (ILayer layer in subtractions)
-                layer.CalculateNonVariableLayers();
-        }
-        private void GetBetterChildrenLayers()
-        {
-            for (int i = 0; i < additions.Count; i++)
-                additions[i] = Layer.GetBetterChild(additions[i]);
-            for (int i = 0; i < subtractions.Count; i++)
-                subtractions[i] = Layer.GetBetterChild(subtractions[i]);
-        }
-
-        private void CombineMultiplyDivideLayers()
+        public void CombineMultiplyDivideLayers()
         {
             Layer.ReplaceLayersWithMultiplyLayers(additions);
             Layer.ReplaceLayersWithMultiplyLayers(subtractions);
@@ -116,7 +55,7 @@ namespace EquationSolver
             if (equalPairs.Count > 0)
             {
                 CombinePair(equalPairs[0], all);
-                StrongSimplification();
+                CombineMultiplyDivideLayers();
                 GetBetterChildrenLayers();
             }
         }
@@ -181,7 +120,10 @@ namespace EquationSolver
         public void Simplify()
         {
             SimplifyChildren();
+            CalculateNonVariableLayers();
+            ReduceDuplicatesInAdditionsAndSubtractions();
             RemoveZeros();
+            GetBetterChildrenLayers();
 
             for (int i = 0; i < additions.Count; i++)
             {
@@ -206,6 +148,17 @@ namespace EquationSolver
                 }
             }
         }
+        private void SimplifyChildren()
+        {
+            foreach (ILayer layer in additions)
+            {
+                layer.Simplify();
+            }
+            foreach (ILayer layer in subtractions)
+            {
+                layer.Simplify();
+            }
+        }
         public void RemoveZeros()
         {
             for (int i = 0; i < additions.Count; i++)
@@ -226,15 +179,65 @@ namespace EquationSolver
                 }
             }
         }
-        private void SimplifyChildren()
+        public void CalculateNonVariableLayers()
+        {
+            CalculateChildren();
+
+            NumberLayer newNumber = new NumberLayer(0);
+            for (int i = 0; i < additions.Count; i++)
+            {
+                if (!Double.IsNaN(additions[i].Calculate(null)))
+                {
+                    newNumber.Value += additions[i].Calculate(null);
+                    additions.RemoveAt(i);
+                    i--;
+                }
+            }
+            for (int i = 0; i < subtractions.Count; i++)
+            {
+                if (!Double.IsNaN(subtractions[i].Calculate(null)))
+                {
+                    newNumber.Value -= subtractions[i].Calculate(null);
+                    subtractions.RemoveAt(i);
+                    i--;
+                }
+            }
+            if (newNumber.Value > 0) additions.Add(newNumber);
+            if (newNumber.Value < 0)
+            {
+                newNumber.Value = -newNumber.Value;
+                subtractions.Add(newNumber);
+            }
+        }
+        private void CalculateChildren()
         {
             foreach (ILayer layer in additions)
-            {
-                layer.Simplify();
-            }
+                layer.CalculateNonVariableLayers();
             foreach (ILayer layer in subtractions)
+                layer.CalculateNonVariableLayers();
+        }
+        private void GetBetterChildrenLayers()
+        {
+            for (int i = 0; i < additions.Count; i++)
+                additions[i] = Layer.GetBetterChild(additions[i]);
+            for (int i = 0; i < subtractions.Count; i++)
+                subtractions[i] = Layer.GetBetterChild(subtractions[i]);
+        }
+        private void ReduceDuplicatesInAdditionsAndSubtractions()
+        {
+            ILayer[] pair = null;
+            for (int i = 0; i < additions.Count; i++)
             {
-                layer.Simplify();
+                for (int j = 0; j < subtractions.Count; j++)
+                {
+                    if (Layer.Compare(additions[i], subtractions[j])) pair = new ILayer[] { additions[i], subtractions[j] };
+                }
+            }
+            if (pair != null)
+            {
+                additions.Remove(pair[0]);
+                subtractions.Remove(pair[1]);
+                ReduceDuplicatesInAdditionsAndSubtractions();
             }
         }
 

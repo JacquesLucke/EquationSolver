@@ -43,12 +43,6 @@ namespace EquationSolver
             return variables;
         }
 
-        public void StrongSimplification()
-        {
-            nthRoot.StrongSimplification();
-            baseOfRoot.StrongSimplification();
-            CalculateNonVariableLayers();
-        }
         public void CalculateNonVariableLayers()
         {
             CalculateChildren();
@@ -64,7 +58,8 @@ namespace EquationSolver
 
         public void Simplify()
         {
-            SimplifyChildren();
+            SimplifyChildren(); 
+            CalculateNonVariableLayers();
         }
         private void SimplifyChildren()
         {
