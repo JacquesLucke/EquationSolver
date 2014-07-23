@@ -77,7 +77,7 @@ namespace EquationSolver
 
         public void RearrangeToVariable(char variable)
         {
-            while (terms[0].ToString() != Convert.ToString(variable) || terms[0].ToString() == "")
+            while (!IsReady(variable))
             {
                 if (terms[0].TopLayer is AddSubtractLayer) ((AddSubtractLayer)terms[0].TopLayer).MultiplyChildrenOut();
                 Simplify();
@@ -89,6 +89,14 @@ namespace EquationSolver
                 while (DoSuggestedModification(variable))
                 { Simplify(); }
             }
+        }
+        private bool IsReady(char variable)
+        {
+            if (terms[0].ToString() == Convert.ToString(variable)) return true;
+            if (terms[0].ToString() == "") return true;
+            if (terms[0].ToString() == terms[1].ToString()) return true;
+
+            return false;
         }
         public bool DoSuggestedModification(char variable)
         {
