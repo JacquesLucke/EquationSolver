@@ -69,6 +69,45 @@ namespace EquationSolver
                 terms[i].Divide(divisor);
         }
 
+        public void DoModification()
+        {
+            for (int i = 0; i < 2; i++)
+            {
+                Term term = terms[i];
+                if (term.TopLayer is AddSubtractLayer)
+                {
+                    AddSubtractLayer layer = (AddSubtractLayer)term.TopLayer;
+                    bool didChange = false;
+                    foreach (ILayer l in layer.Additions)
+                    {
+                        if (Layer.ContainsVariables(l))
+                        {
+                            if (i == 1) { Subtract(new Term(l)); didChange = true; }
+                        }
+                        else
+                        {
+                            if (i == 0) { Subtract(new Term(l)); didChange = true; }
+                        }
+                    }
+                    if (!didChange)
+                    {
+                        foreach (ILayer l in layer.Subtractions)
+                        {
+                            if (Layer.ContainsVariables(l))
+                            {
+                                if (i == 1) Add(new Term(l));
+                            }
+                            else
+                            {
+                                if (i == 0) Add(new Term(l));
+                            }
+                        }
+                    }
+                }
+            }
+            Simplify();
+        }
+
         public void Simplify()
         {
             for (int i = 0; i < 2; i++)

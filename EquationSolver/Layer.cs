@@ -190,5 +190,10 @@ namespace EquationSolver
             }
             else return original;
         }
+
+        public static bool ContainsVariables(ILayer layer)
+        {
+            return layer.GetVariables().Count != 0;
+        }
     }
 }

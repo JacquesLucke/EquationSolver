@@ -15,8 +15,12 @@ namespace EquationSolver
         {
             try
             {
-                Equation equation = Equation.FromString("3+x=5");
+                Equation equation = Equation.FromString("3+x-7+x=5+5+x+x+x+x");
+                equation.DoModification();
+                equation.DoModification();
+                equation.DoModification();
                 Console.WriteLine(equation);
+
                 while (true)
                 {
                     string text = GetInputString("Modification");
