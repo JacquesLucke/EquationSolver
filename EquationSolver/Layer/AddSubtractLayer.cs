@@ -209,7 +209,7 @@ namespace EquationSolver
 
             for (int i = 0; i < subtractions.Count; i++)
             {
-                if (subtractions[i].Calculate(null) == 1)
+                if (subtractions[i].Calculate(null) == 0)
                 {
                     subtractions.RemoveAt(i);
                     i--;
