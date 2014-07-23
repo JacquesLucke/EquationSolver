@@ -117,6 +117,30 @@ namespace EquationSolver
                 topLayer = Layer.GetBetterChild(newTopLayer);
             }
         }
+        public void Invert()
+        {
+            if(topLayer is AddSubtractLayer)
+            {
+                AddSubtractLayer layer = (AddSubtractLayer)topLayer;
+                List<ILayer> additions = new List<ILayer>(layer.Additions);
+                List<ILayer> subtractions = new List<ILayer>(layer.Subtractions);
+                layer.Additions.Clear();
+                layer.Additions.AddRange(subtractions);
+                layer.Subtractions.Clear();
+                layer.Subtractions.AddRange(additions);
+            }
+            else if(topLayer is MultiplyDivideLayer)
+            {
+                ((MultiplyDivideLayer)topLayer).Factors.Add(new NumberLayer(-1));
+            }
+            else
+            {
+                MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
+                newTopLayer.Factors.Add(topLayer);
+                newTopLayer.Factors.Add(new NumberLayer(-1));
+                topLayer = newTopLayer;
+            }
+        }
 
         public override string ToString()
         {

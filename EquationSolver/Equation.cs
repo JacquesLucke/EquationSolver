@@ -69,6 +69,11 @@ namespace EquationSolver
             for (int i = 0; i < 2; i++)
                 terms[i].Divide(divisor);
         }
+        public void Invert()
+        {
+            for (int i = 0; i < 2; i++)
+                terms[i].Invert();
+        }
 
         public void RearrangeToVariable(char variable)
         {
