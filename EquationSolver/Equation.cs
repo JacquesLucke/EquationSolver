@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EquationSolver
 {
-    public delegate void Modification(Term term);
+    public delegate bool TermChange(char variable);
     public class Equation
     {
         Term[] terms;
@@ -92,26 +92,18 @@ namespace EquationSolver
         }
         public bool DoSuggestedModification(char variable)
         {
-            Modification modification;
-            Term term;
-            SuggestNextModification(out modification, out term, variable);
-            if (modification != null && term != null)
+            List<TermChange> possibleChanges = new List<TermChange>();
+            possibleChanges.Add(MoveAdditionsAndSubtractions);
+            possibleChanges.Add(MoveFactorsAndDivisors);
+
+            foreach(TermChange change in possibleChanges)
             {
-                DoModification(modification, term);
-                return true;
+                if (change(variable)) break;
             }
             return false;
         }
-        public void DoModification(Modification modification, Term term)
+        private bool MoveAdditionsAndSubtractions(char variable)
         {
-            modification(term);
-            Simplify();
-        }
-        public void SuggestNextModification(out Modification modification, out Term changeTerm, char variable)
-        {
-            modification = null;
-            changeTerm = null;
-
             for (int i = 0; i < 2; i++)
             {
                 Term term = terms[i];
@@ -122,23 +114,24 @@ namespace EquationSolver
                     {
                         if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            modification = Subtract;
-                            changeTerm = new Term(l);
-                            return;
+                            Subtract(new Term(l));
+                            return true;
                         }
                     }
                     foreach (ILayer l in layer.Subtractions)
                     {
                         if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            modification = Add;
-                            changeTerm = new Term(l);
-                            return;
+                            Add(new Term(l));
+                            return true;
                         }
                     }
                 }
             }
-
+            return false;
+        }
+        private bool MoveFactorsAndDivisors(char variable)
+        {
             for (int i = 0; i < 2; i++)
             {
                 Term term = terms[i];
@@ -149,22 +142,21 @@ namespace EquationSolver
                     {
                         if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            modification = Divide;
-                            changeTerm = new Term(l);
-                            return;
+                            Divide(new Term(l));
+                            return true;
                         }
                     }
                     foreach (ILayer l in layer.Divisors)
                     {
                         if (l.GetVariables().Contains(variable) ^ i == 0)
                         {
-                            modification = Multiply;
-                            changeTerm = new Term(l);
-                            return;
+                            Multiply(new Term(l));
+                            return true;
                         }
                     }
                 }
             }
+            return false;
         }
 
         public void Simplify()
