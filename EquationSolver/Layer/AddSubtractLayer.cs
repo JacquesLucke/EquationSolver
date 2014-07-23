@@ -39,84 +39,6 @@ namespace EquationSolver
             return variables;
         }
 
-        public void CombineMultiplyDivideLayers()
-        {
-            Layer.ReplaceLayersWithMultiplyLayers(additions);
-            Layer.ReplaceLayersWithMultiplyLayers(subtractions);
-
-            List<MultiplyDivideLayer> all = new List<MultiplyDivideLayer>();
-            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(additions));
-            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(subtractions));
-
-            List<ILayer> subFactors = Layer.GetAllFactors(all);
-            List<ILayer[]> equalPairs = Layer.FindEqualPairs(subFactors);
-            RemovePairsInSameLayer(all, equalPairs);
-
-            if (equalPairs.Count > 0)
-            {
-                CombinePair(equalPairs[0], all);
-                CombineMultiplyDivideLayers();
-                GetBetterChildrenLayers();
-            }
-        }
-        private void RemovePairsInSameLayer(List<MultiplyDivideLayer> layers, List<ILayer[]> pairs)
-        {
-            for (int i = 0; i < pairs.Count; i++)
-            {
-                for (int j = 0; j < layers.Count; j++)
-                {
-                    if (layers[j].Factors.Contains(pairs[i][0]) && layers[j].Factors.Contains(pairs[i][1]) || pairs[i][0].GetVariables().Count == 0)
-                    {
-                        pairs.RemoveAt(i);
-                        i--;
-                        break;
-                    }
-                }
-            }
-        }
-        private AddSubtractLayer CreateNonCombinedLayerPart(ILayer[] pair, MultiplyDivideLayer[] parents)
-        {
-            AddSubtractLayer layerPart = new AddSubtractLayer();
-
-            MultiplyDivideLayer layer0 = Layer.GetMultiplyDivideLayerWithoutOne(parents[0], pair[0]);
-            if (additions.Contains(parents[0])) layerPart.Additions.Add(layer0);
-            else layerPart.Subtractions.Add(layer0);
-
-            MultiplyDivideLayer layer1 = Layer.GetMultiplyDivideLayerWithoutOne(parents[1], pair[1]);
-            if (additions.Contains(parents[1])) layerPart.Additions.Add(layer1);
-            else layerPart.Subtractions.Add(layer1);
-
-            return layerPart;
-        }
-        private void CombinePair(ILayer[] pair, List<MultiplyDivideLayer> all)
-        {
-            MultiplyDivideLayer[] parents = new MultiplyDivideLayer[2];
-            List<ILayer> tmp = new List<ILayer>(all);
-            parents[0] = (MultiplyDivideLayer)Layer.FindParentLayer(pair[0], tmp);
-            parents[1] = (MultiplyDivideLayer)Layer.FindParentLayer(pair[1], tmp);
-
-            MultiplyDivideLayer newLayer = new MultiplyDivideLayer();
-            newLayer.Factors.Add(CreateNonCombinedLayerPart(pair, parents));
-            newLayer.Factors.Add(pair[0]);
-            additions.Add(newLayer);
-
-            RemoveFromLayers(parents[0]);
-            RemoveFromLayers(parents[1]);
-        }
-        private MultiplyDivideLayer FindParentLayer(ILayer child, List<MultiplyDivideLayer> possibleParents)
-        {
-            foreach(MultiplyDivideLayer layer in possibleParents)
-            {
-                if (layer.Factors.Contains(child)) return layer;
-            }
-            return null;
-        }
-        private void RemoveFromLayers(ILayer layer)
-        {
-            additions.Remove(layer);
-            subtractions.Remove(layer);
-        }
-
         public void Simplify()
         {
             SimplifyChildren();
@@ -241,9 +163,82 @@ namespace EquationSolver
             }
         }
 
-        public bool NeedsBrackets()
+        public void CombineMultiplyDivideLayers()
         {
-            return (additions.Count + subtractions.Count) > 1;
+            Layer.ReplaceLayersWithMultiplyLayers(additions);
+            Layer.ReplaceLayersWithMultiplyLayers(subtractions);
+
+            List<MultiplyDivideLayer> all = new List<MultiplyDivideLayer>();
+            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(additions));
+            all.AddRange(Layer.GetAllOfType<MultiplyDivideLayer>(subtractions));
+
+            List<ILayer> subFactors = Layer.GetAllFactors(all);
+            List<ILayer[]> equalPairs = Layer.FindEqualPairs(subFactors);
+            RemovePairsInSameLayer(all, equalPairs);
+
+            if (equalPairs.Count > 0)
+            {
+                CombinePair(equalPairs[0], all);
+                CombineMultiplyDivideLayers();
+                GetBetterChildrenLayers();
+            }
+        }
+        private void RemovePairsInSameLayer(List<MultiplyDivideLayer> layers, List<ILayer[]> pairs)
+        {
+            for (int i = 0; i < pairs.Count; i++)
+            {
+                for (int j = 0; j < layers.Count; j++)
+                {
+                    if (layers[j].Factors.Contains(pairs[i][0]) && layers[j].Factors.Contains(pairs[i][1]) || pairs[i][0].GetVariables().Count == 0)
+                    {
+                        pairs.RemoveAt(i);
+                        i--;
+                        break;
+                    }
+                }
+            }
+        }
+        private AddSubtractLayer CreateNonCombinedLayerPart(ILayer[] pair, MultiplyDivideLayer[] parents)
+        {
+            AddSubtractLayer layerPart = new AddSubtractLayer();
+
+            MultiplyDivideLayer layer0 = Layer.GetMultiplyDivideLayerWithoutOne(parents[0], pair[0]);
+            if (additions.Contains(parents[0])) layerPart.Additions.Add(layer0);
+            else layerPart.Subtractions.Add(layer0);
+
+            MultiplyDivideLayer layer1 = Layer.GetMultiplyDivideLayerWithoutOne(parents[1], pair[1]);
+            if (additions.Contains(parents[1])) layerPart.Additions.Add(layer1);
+            else layerPart.Subtractions.Add(layer1);
+
+            return layerPart;
+        }
+        private void CombinePair(ILayer[] pair, List<MultiplyDivideLayer> all)
+        {
+            MultiplyDivideLayer[] parents = new MultiplyDivideLayer[2];
+            List<ILayer> tmp = new List<ILayer>(all);
+            parents[0] = (MultiplyDivideLayer)Layer.FindParentLayer(pair[0], tmp);
+            parents[1] = (MultiplyDivideLayer)Layer.FindParentLayer(pair[1], tmp);
+
+            MultiplyDivideLayer newLayer = new MultiplyDivideLayer();
+            newLayer.Factors.Add(CreateNonCombinedLayerPart(pair, parents));
+            newLayer.Factors.Add(pair[0]);
+            additions.Add(newLayer);
+
+            RemoveFromLayers(parents[0]);
+            RemoveFromLayers(parents[1]);
+        }
+        private MultiplyDivideLayer FindParentLayer(ILayer child, List<MultiplyDivideLayer> possibleParents)
+        {
+            foreach (MultiplyDivideLayer layer in possibleParents)
+            {
+                if (layer.Factors.Contains(child)) return layer;
+            }
+            return null;
+        }
+        private void RemoveFromLayers(ILayer layer)
+        {
+            additions.Remove(layer);
+            subtractions.Remove(layer);
         }
 
         public double Calculate(Dictionary<char, double> variableToNumberDictionary)
@@ -278,6 +273,10 @@ namespace EquationSolver
                 else s += "-" + subtractions[i].ToString();
             }
             return s;
+        }
+        public bool NeedsBrackets()
+        {
+            return (additions.Count + subtractions.Count) > 1;
         }
     }
 }

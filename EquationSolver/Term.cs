@@ -39,6 +39,7 @@ namespace EquationSolver
         public void Simplify()
         {
             topLayer.Simplify();
+            topLayer = Layer.GetBetterChild(topLayer);
         }
         public void CalculateNonVariableLayers()
         {
