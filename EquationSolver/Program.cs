@@ -15,18 +15,29 @@ namespace EquationSolver
         {
             try
             {
-                Term term = Term.FromString("100");
-
+                Equation equation = Equation.FromString("3+x=5");
+                Console.WriteLine(equation);
                 while (true)
                 {
-                    string text = GetInputString("Modificition");
-                    term.Modify(text);
-                    term.Simplify();
-                    Console.WriteLine("Simplification: " + term.ToString());
-                    HashSet<char> s = term.GetVariables();
-                    if (s.Count == 0) Console.WriteLine("Result: " + term.Calculate());
+                    string text = GetInputString("Modification");
+                    equation.Modify(text);
+                    equation.Simplify();
+                    Console.WriteLine(equation);
                     Console.WriteLine();
                 }
+
+                //Term term = Term.FromString("100");
+
+                //while (true)
+                //{
+                //    string text = GetInputString("Modificition");
+                //    term.Modify(text);
+                //    term.Simplify();
+                //    Console.WriteLine("Simplification: " + term.ToString());
+                //    HashSet<char> s = term.GetVariables();
+                //    if (s.Count == 0) Console.WriteLine("Result: " + term.Calculate());
+                //    Console.WriteLine();
+                //}
             }
             catch (ParseStringException e)
             {

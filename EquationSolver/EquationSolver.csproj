@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\EqualElement.cs" />
     <Compile Include="Elements\ExpElement.cs" />
     <Compile Include="Elements\PiElement.cs" />
     <Compile Include="Elements\EElement.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Elements\UnderscoreElement.cs" />
     <Compile Include="Elements\VariableElement.cs" />
     <Compile Include="ElementsToLayerParser.cs" />
+    <Compile Include="Equation.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="Layer\LogarithmLayer.cs" />
     <Compile Include="Layer\MultiplyDivideLayer.cs" />

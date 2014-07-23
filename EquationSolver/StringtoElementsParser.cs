@@ -39,6 +39,7 @@ namespace EquationSolver
             charToElementDictionary.Add(')', typeof(CloseBracketElement));
             charToElementDictionary.Add('_', typeof(UnderscoreElement));
             charToElementDictionary.Add('E', typeof(EElement));
+            charToElementDictionary.Add('=', typeof(EqualElement));
         }
 
         public List<IElement> Elements
