@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EquationSolver", "EquationSolver\EquationSolver.csproj", "{19268A6C-33E2-416E-B459-3FB006179BD1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{2851135A-01C8-4B74-8D92-D78B814BBE76}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{19268A6C-33E2-416E-B459-3FB006179BD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19268A6C-33E2-416E-B459-3FB006179BD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19268A6C-33E2-416E-B459-3FB006179BD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2851135A-01C8-4B74-8D92-D78B814BBE76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2851135A-01C8-4B74-8D92-D78B814BBE76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2851135A-01C8-4B74-8D92-D78B814BBE76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2851135A-01C8-4B74-8D92-D78B814BBE76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

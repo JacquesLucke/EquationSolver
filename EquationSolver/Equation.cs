@@ -47,6 +47,11 @@ namespace EquationSolver
             }
         }
 
+        public Term[] Terms
+        {
+            get { return terms; }
+        }
+
         public void Modify(string modification)
         {
             for (int i = 0; i < 2; i++)
