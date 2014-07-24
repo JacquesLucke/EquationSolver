@@ -40,12 +40,13 @@ namespace TestProject
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.White;
 
-            if (failed) 
+            if (failed)
+            {
                 Console.WriteLine("test failed");
-            else 
-                Console.WriteLine("test ok");
-
-            Console.ReadKey();
+                Console.ReadKey();
+            }
+            else
+                Console.WriteLine("test ok");            
         }
 
         static bool TestEquation(string equationString, double answer)
