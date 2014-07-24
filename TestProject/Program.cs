@@ -31,6 +31,7 @@ namespace TestProject
             testEquations.Add(new KeyValuePair<string, double>("3(x - 2) = 5(x - 4)", 7));
             testEquations.Add(new KeyValuePair<string, double>("25 - (17 - 2x) = 2 + (8x - 6)", 2));
             testEquations.Add(new KeyValuePair<string, double>("2(x - 1) = (3x + 5)/2", 9));
+            testEquations.Add(new KeyValuePair<string, double>("5 = x", 5));
 
             bool failed = false;
             foreach(KeyValuePair<string, double> pair in testEquations)

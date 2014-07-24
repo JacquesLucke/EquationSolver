@@ -106,6 +106,7 @@ namespace EquationSolver
         }
         private bool IsReady(char variable)
         {
+            if (!terms[0].GetVariables().Contains(variable) && !terms[1].GetVariables().Contains(variable)) return true;
             if (!Layer.ContainsVariables(terms[0].TopLayer) && !Layer.ContainsVariables(terms[1].TopLayer) && !Layer.Compare(terms[0].TopLayer, terms[1].TopLayer))
                 return true;
             if (terms[0].ToString() == Convert.ToString(variable)) return true;
@@ -118,6 +119,8 @@ namespace EquationSolver
         public bool DoSuggestedModification(char variable)
         {
             List<TermChange> possibleChanges = new List<TermChange>();
+            possibleChanges.Add(MoveVariable);
+            possibleChanges.Add(MoveNumber);
             possibleChanges.Add(MoveAdditionsAndSubtractions);
             possibleChanges.Add(MoveFactorsAndDivisors);
             possibleChanges.Add(InvertIfOnlySubtraction);
@@ -126,6 +129,28 @@ namespace EquationSolver
             foreach(TermChange change in possibleChanges)
             {
                 if (change(variable)) return true;
+            }
+            return false;
+        }
+        private bool MoveVariable(char variable)
+        {
+            if(terms[1].TopLayer is VariableLayer)
+            {
+                VariableLayer l = (VariableLayer)terms[1].TopLayer;
+                if(l.Name == variable)
+                {
+                    Subtract(Term.FromString(Convert.ToString(variable)));
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool MoveNumber(char variable)
+        {
+            if (terms[0].TopLayer is NumberLayer)
+            {
+                Subtract(new Term(terms[0].TopLayer));
+                return true;
             }
             return false;
         }
