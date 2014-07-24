@@ -21,6 +21,7 @@ namespace EquationSolver
         }
         public void Parse()
         {
+            PreParsing();
             DeleteSurroundingBrackets();
 
             Type topLayerType = GetTopLayerType();
@@ -45,6 +46,10 @@ namespace EquationSolver
 
             if (topLayerType == typeof(LogarithmLayer))
                 topLayer = ParseLogarithmLayerFromElements();
+        }
+        private void PreParsing()
+        {
+            if (elements.Count == 0) elements.Add(new NumberElement(0));
         }
         private void DeleteSurroundingBrackets()
         {

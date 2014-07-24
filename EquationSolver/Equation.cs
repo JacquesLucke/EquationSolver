@@ -33,6 +33,9 @@ namespace EquationSolver
         private static void SplitElementListAtEqualElement(List<IElement> elements, out List<IElement>[] parts)
         {
             parts = new List<IElement>[2];
+            parts[0] = new List<IElement>();
+            parts[1] = new List<IElement>();
+
             for(int  i = 0; i<elements.Count; i++)
             {
                 if(elements[i] is EqualElement)

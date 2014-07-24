@@ -16,10 +16,10 @@ namespace EquationSolver
             if (number == Math.PI) return "PI";
 
             double factor = number / Math.E;
-            if (Math.Abs(factor - Math.Round(factor)) < error) return Math.Round(factor) + "E";
+            if (Math.Abs(factor - Math.Round(factor)) < error && factor != 0) return Math.Round(factor) + "E";
 
             factor = number / Math.PI;
-            if (Math.Abs(factor - Math.Round(factor)) < error) return Math.Round(factor) + "PI";
+            if (Math.Abs(factor - Math.Round(factor)) < error && factor != 0) return Math.Round(factor) + "PI";
 
             double divisor = Math.E / number;
             if (Math.Abs(divisor - Math.Round(divisor)) < error) return "E/" + Math.Round(divisor);
