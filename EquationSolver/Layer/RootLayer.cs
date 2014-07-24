@@ -43,6 +43,16 @@ namespace EquationSolver
             return variables;
         }
 
+        public void Simplify()
+        {
+            SimplifyChildren(); 
+            CalculateNonVariableLayers();
+        }
+        private void SimplifyChildren()
+        {
+            nthRoot.Simplify();
+            baseOfRoot.Simplify();
+        }
         public void CalculateNonVariableLayers()
         {
             CalculateChildren();
@@ -54,17 +64,6 @@ namespace EquationSolver
         {
             nthRoot.CalculateNonVariableLayers();
             baseOfRoot.CalculateNonVariableLayers();
-        }
-
-        public void Simplify()
-        {
-            SimplifyChildren(); 
-            CalculateNonVariableLayers();
-        }
-        private void SimplifyChildren()
-        {
-            nthRoot.Simplify();
-            baseOfRoot.Simplify();
         }
 
         public bool NeedsBrackets()
