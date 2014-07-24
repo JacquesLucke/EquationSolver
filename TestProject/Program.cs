@@ -33,6 +33,14 @@ namespace TestProject
             testEquations.Add(new KeyValuePair<string, double>("2(x - 1) = (3x + 5)/2", 9));
             testEquations.Add(new KeyValuePair<string, double>("5 = x", 5));
 
+            testEquations.Add(new KeyValuePair<string, double>("x^2 = 16", 4));
+            testEquations.Add(new KeyValuePair<string, double>("x^3 = 27", 3));
+            testEquations.Add(new KeyValuePair<string, double>("10 = x^2-6", 4));
+            testEquations.Add(new KeyValuePair<string, double>("(4 + x^2)^3 = 512", 2));
+            testEquations.Add(new KeyValuePair<string, double>("sqrtx = 4", 16));
+            testEquations.Add(new KeyValuePair<string, double>("sqrt64 = x", 8));
+            testEquations.Add(new KeyValuePair<string, double>("root_3_(x - 3) = 3", 30));
+
             bool failed = false;
             foreach(KeyValuePair<string, double> pair in testEquations)
                 if (!TestEquation(pair.Key, pair.Value)) failed = true;

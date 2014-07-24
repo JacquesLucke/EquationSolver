@@ -120,6 +120,10 @@ namespace EquationSolver
         public static ILayer GetBetterChild(ILayer childNow)
         {
             ILayer newChild = childNow;
+            if(!ContainsVariables(childNow))
+            {
+                newChild = new NumberLayer(childNow.Calculate(null));
+            }
             if (childNow is AddSubtractLayer)
             {
                 AddSubtractLayer child = (AddSubtractLayer)childNow;
@@ -139,6 +143,40 @@ namespace EquationSolver
                     if (child.Factors.Count == 1)
                     {
                         newChild = child.Factors[0];
+                    }
+                }
+            }
+            if(childNow is RootLayer)
+            {
+                RootLayer child = (RootLayer)childNow;
+                if(child.BaseOfRoot is PowerLayer)
+                {
+                    PowerLayer powerLayer = (PowerLayer)child.BaseOfRoot;
+                    if (Compare(child.NthRoot, powerLayer.Exponent)) newChild = powerLayer.BaseOfPower;
+                    else
+                    {
+                        MultiplyDivideLayer newNthRoot = new MultiplyDivideLayer();
+                        newNthRoot.Factors.Add(child.NthRoot);
+                        newNthRoot.Divisors.Add(powerLayer.Exponent);
+                        child.NthRoot = newNthRoot;
+                        child.BaseOfRoot = powerLayer.BaseOfPower;
+                    }
+                }
+            }
+            if(childNow is PowerLayer)
+            {
+                PowerLayer child = (PowerLayer)childNow;
+                if(child.BaseOfPower is RootLayer)
+                {
+                    RootLayer sqrtLayer = (RootLayer)child.BaseOfPower;
+                    if (Compare(child.Exponent, sqrtLayer.NthRoot)) newChild = sqrtLayer.BaseOfRoot;
+                    else
+                    {
+                        MultiplyDivideLayer newExponent = new MultiplyDivideLayer();
+                        newExponent.Factors.Add(child.Exponent);
+                        newExponent.Divisors.Add(sqrtLayer.NthRoot);
+                        child.Exponent = newExponent;
+                        child.BaseOfPower = sqrtLayer.BaseOfRoot;
                     }
                 }
             }

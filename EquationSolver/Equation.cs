@@ -87,6 +87,16 @@ namespace EquationSolver
             for (int i = 0; i < 2; i++)
                 terms[i].Reciproke();
         }
+        public void Root(Term nthRoot)
+        {
+            for (int i = 0; i < 2; i++)
+                terms[i].Root(nthRoot);
+        }
+        public void Power(Term exponent)
+        {
+            for (int i = 0; i < 2; i++)
+                terms[i].Power(exponent);
+        }
 
         public void RearrangeToVariable(char variable)
         {
@@ -125,6 +135,8 @@ namespace EquationSolver
             possibleChanges.Add(MoveFactorsAndDivisors);
             possibleChanges.Add(InvertIfOnlySubtraction);
             possibleChanges.Add(ReciprokeIfOnlyDivision);
+            possibleChanges.Add(RootIfOnlyPower);
+            possibleChanges.Add(PowerIfOnlyRoot);
 
             foreach(TermChange change in possibleChanges)
             {
@@ -149,8 +161,11 @@ namespace EquationSolver
         {
             if (terms[0].TopLayer is NumberLayer)
             {
-                Subtract(new Term(terms[0].TopLayer));
-                return true;
+                if (terms[0].TopLayer.Calculate(null) != 0)
+                {
+                    Subtract(new Term(terms[0].TopLayer));
+                    return true;
+                }
             }
             return false;
         }
@@ -225,6 +240,32 @@ namespace EquationSolver
             {
                 Reciproke();
                 return true;
+            }
+            return false;
+        }
+        private bool RootIfOnlyPower(char variable)
+        {
+            if(terms[0].TopLayer is PowerLayer)
+            {
+                PowerLayer powerLayer = (PowerLayer)terms[0].TopLayer;
+                if(powerLayer.BaseOfPower.GetVariables().Contains(variable))
+                {
+                    Root(new Term(powerLayer.Exponent));
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool PowerIfOnlyRoot(char variable)
+        {
+            if (terms[0].TopLayer is RootLayer)
+            {
+                RootLayer rootLayer = (RootLayer)terms[0].TopLayer;
+                if (rootLayer.BaseOfRoot.GetVariables().Contains(variable))
+                {
+                    Power(new Term(rootLayer.NthRoot));
+                    return true;
+                }
             }
             return false;
         }

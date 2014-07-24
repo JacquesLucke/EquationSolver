@@ -162,6 +162,21 @@ namespace EquationSolver
                 topLayer = newTopLayer;
             }
         }
+        public void Root(Term nthRoot)
+        {
+            RootLayer rootLayer = new RootLayer();
+            rootLayer.NthRoot = nthRoot.TopLayer;
+            rootLayer.BaseOfRoot = topLayer;
+            topLayer = rootLayer;
+        }
+        public void Power(Term exponent)
+        {
+            PowerLayer powerLayer = new PowerLayer();
+            powerLayer.Exponent = exponent.TopLayer;
+            powerLayer.BaseOfPower = topLayer;
+            topLayer = powerLayer;
+        }
+
 
         public override string ToString()
         {
