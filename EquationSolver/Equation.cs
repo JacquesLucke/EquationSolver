@@ -101,6 +101,8 @@ namespace EquationSolver
         }
         private bool IsReady(char variable)
         {
+            if (!Layer.ContainsVariables(terms[0].TopLayer) && !Layer.ContainsVariables(terms[1].TopLayer) && !Layer.Compare(terms[0].TopLayer, terms[1].TopLayer))
+                return true;
             if (terms[0].ToString() == Convert.ToString(variable)) return true;
             if (terms[0].ToString() == "") return true;
             if (terms[0].ToString() == terms[1].ToString()) return true;
