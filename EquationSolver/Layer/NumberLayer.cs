@@ -43,17 +43,7 @@ namespace EquationSolver
 
         public override string ToString()
         {
-            string fractionString = GetFractionString();
-            string normalString = Convert.ToString(value);
-
-            if (fractionString.Length < normalString.Length) return fractionString;
-            else return normalString;
-        }
-        private string GetFractionString()
-        {
-            int numerator, denominator;
-            Utils.GetFractionFromDecimal(value, out numerator, out denominator);
-            return numerator + "/" + denominator;
+            return Utils.GetOptimizedTextFromNumber(value);
         }
     }
 }
