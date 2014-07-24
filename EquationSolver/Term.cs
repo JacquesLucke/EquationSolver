@@ -158,7 +158,7 @@ namespace EquationSolver
             {
                 MultiplyDivideLayer newTopLayer = new MultiplyDivideLayer();
                 newTopLayer.Factors.Add(new NumberLayer(1));
-                newTopLayer.Factors.Add(topLayer);
+                newTopLayer.Divisors.Add(topLayer);
                 topLayer = newTopLayer;
             }
         }

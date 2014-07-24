@@ -50,7 +50,7 @@ namespace TestProject
         {
             Equation e = Equation.FromString(equationString);
             e.RearrangeToVariable('x');
-            if (e.Terms[1].Calculate() == answer)
+            if (Utils.GetOptimizedTextFromNumber(e.Terms[1].Calculate()) == Utils.GetOptimizedTextFromNumber(answer))
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("correct   " + equationString + "   x = " + e.Terms[1].ToString());
