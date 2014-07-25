@@ -258,5 +258,57 @@ namespace EquationSolver
             }
             return false;
         }
+
+        public static bool IsQuadraticLayer(ILayer layer, char variable)
+        {
+            return GetDegreeOfLayer(layer, variable) == 2;
+        }
+        public static int GetDegreeOfLayer(ILayer layer, char variable)
+        {
+            HashSet<char> variables = layer.GetVariables();
+            Dictionary<char, double> variableTable = CreateRandomVariableTable(variables);
+            variableTable[variable] = 50000;
+            if (Double.IsNaN(layer.Calculate(variableTable))) return -1;
+            variableTable[variable] = -50000;
+            if (Double.IsNaN(layer.Calculate(variableTable))) return -1;
+
+            double[] functionValues = GetFunctionValues(layer, variable, 130, 6, 1);
+            for(int i = 0; i < 4; i++)
+            {
+                if (AreValuesEqual(functionValues)) return i;
+                functionValues = GetDifferences(functionValues);
+            }
+            return -1;
+        }
+        private static double[] GetFunctionValues(ILayer layer, char variable, double begin, int stepAmount, double stepSize)
+        {
+            double[] functionValues = new double[stepAmount];
+            HashSet<char> variables = layer.GetVariables();
+            Dictionary<char, double> variableTable = CreateRandomVariableTable(variables);
+            for (int i = 0; i < functionValues.Length; i++)
+            {
+                variableTable[variable] = begin + i * stepSize;
+                functionValues[i] = layer.Calculate(variableTable);
+            }
+            return functionValues;
+        }
+        private static double[] GetDifferences(double[] functionValues)
+        {
+            double[] differences = new double[functionValues.Length - 1];
+            for (int i = 0; i < differences.Length; i++)
+            {
+                differences[i] = functionValues[i + 1] - functionValues[i];
+            }
+            return differences;
+        }
+        private static bool AreValuesEqual(double[] functionValues)
+        {
+            double error = 0.0000001;
+            for (int i = 1; i < functionValues.Length; i++)
+            {
+                if (Math.Abs(functionValues[i] - functionValues[i - 1]) > error) return false;
+            }
+            return true;
+        }
     }
 }
