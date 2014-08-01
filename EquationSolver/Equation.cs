@@ -129,6 +129,7 @@ namespace EquationSolver
         public bool DoSuggestedModification(char variable)
         {
             List<TermChange> possibleChanges = new List<TermChange>();
+            possibleChanges.Add(SolveQuadraticEquation);
             possibleChanges.Add(MoveVariable);
             possibleChanges.Add(MoveNumber);
             possibleChanges.Add(MoveAdditionsAndSubtractions);
@@ -141,6 +142,59 @@ namespace EquationSolver
             foreach(TermChange change in possibleChanges)
             {
                 if (change(variable)) return true;
+            }
+            return false;
+        }
+        private bool SolveQuadraticEquation(char variable)
+        {
+            Term term = Term.FromString(terms[0].ToString());
+            term.Subtract(Term.FromString(terms[1].ToString()));
+            term.Simplify();
+            if (term.TopLayer is AddSubtractLayer) ((AddSubtractLayer)term.TopLayer).MultiplyChildrenOut();
+            else
+            {
+                AddSubtractLayer layer = new AddSubtractLayer();
+                layer.Additions.Add(term.TopLayer);
+                layer.Simplify();
+                layer.MultiplyChildrenOut();
+                layer.MultiplyChildrenOut();
+                term = new Term(layer);
+            }
+            term.Simplify();
+            if(Layer.IsQuadraticLayer(term.TopLayer, variable))
+            {
+                AddSubtractLayer quadraticElements = new AddSubtractLayer();
+                AddSubtractLayer linearElements = new AddSubtractLayer();
+                AddSubtractLayer constantElements = new AddSubtractLayer();
+
+                if(term.TopLayer is AddSubtractLayer)
+                {
+                    foreach(ILayer layer in ((AddSubtractLayer)term.TopLayer).Additions)
+                    {
+                        if (Layer.IsConstantLayer(layer, variable)) constantElements.Additions.Add(layer);
+                        if (Layer.IsLinearLayer(layer, variable)) linearElements.Additions.Add(layer);
+                        if (Layer.IsQuadraticLayer(layer, variable)) quadraticElements.Additions.Add(layer);
+                    }
+                    foreach (ILayer layer in ((AddSubtractLayer)term.TopLayer).Subtractions)
+                    {
+                        if (Layer.IsConstantLayer(layer, variable)) constantElements.Subtractions.Add(layer);
+                        if (Layer.IsLinearLayer(layer, variable)) linearElements.Subtractions.Add(layer);
+                        if (Layer.IsQuadraticLayer(layer, variable)) quadraticElements.Subtractions.Add(layer);
+                    }
+                }
+                else
+                {
+                    if (Layer.IsConstantLayer(term.TopLayer, variable)) constantElements.Additions.Add(term.TopLayer);
+                    if (Layer.IsLinearLayer(term.TopLayer, variable)) linearElements.Additions.Add(term.TopLayer);
+                    if (Layer.IsQuadraticLayer(term.TopLayer, variable)) quadraticElements.Additions.Add(term.TopLayer);
+                }
+
+                quadraticElements.CombineMultiplyDivideLayers();
+                quadraticElements.Simplify();
+                linearElements.CombineMultiplyDivideLayers();
+                linearElements.Simplify();
+                constantElements.CombineMultiplyDivideLayers();
+                constantElements.Simplify();
             }
             return false;
         }
@@ -269,6 +323,7 @@ namespace EquationSolver
             }
             return false;
         }
+
 
         public void Simplify()
         {
