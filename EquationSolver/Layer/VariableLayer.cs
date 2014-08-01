@@ -33,6 +33,9 @@ namespace EquationSolver
                     value = variableToNumberDictionary[name];
             return value;
         }
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+        }
 
         public HashSet<char> GetVariables()
         {

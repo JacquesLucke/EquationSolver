@@ -259,6 +259,14 @@ namespace EquationSolver
             return false;
         }
 
+        public static bool IsConstantLayer(ILayer layer, char variable)
+        {
+            return GetDegreeOfLayer(layer, variable) == 0;
+        }
+        public static bool IsLinearLayer(ILayer layer, char variable)
+        {
+            return GetDegreeOfLayer(layer, variable) == 1;
+        }
         public static bool IsQuadraticLayer(ILayer layer, char variable)
         {
             return GetDegreeOfLayer(layer, variable) == 2;

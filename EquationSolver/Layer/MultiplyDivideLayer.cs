@@ -193,6 +193,19 @@ namespace EquationSolver
 
             return output;
         }
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            for (int i = 0; i < Factors.Count; i++)
+            {
+                if (Factors[i] is VariableLayer && Factors[i].GetVariables().Contains(variable)) Factors[i] = layer;
+                Factors[i].ReplaceVariableWithLayer(variable, layer);
+            }
+            for (int i = 0; i < Divisors.Count; i++)
+            {
+                if (Divisors[i] is VariableLayer && Divisors[i].GetVariables().Contains(variable)) Divisors[i] = layer;
+                Divisors[i].ReplaceVariableWithLayer(variable, layer);
+            }
+        }
 
         public override string ToString()
         {

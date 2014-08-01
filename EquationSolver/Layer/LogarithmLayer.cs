@@ -32,6 +32,14 @@ namespace EquationSolver
         {
             return Math.Log(number.Calculate(variableToNumberDictionary), baseOfLogarithm.Calculate(variableToNumberDictionary));
         }
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            if (baseOfLogarithm is VariableLayer && baseOfLogarithm.GetVariables().Contains(variable)) baseOfLogarithm = layer;
+            baseOfLogarithm.ReplaceVariableWithLayer(variable, layer);
+
+            if (number is VariableLayer && number.GetVariables().Contains(variable)) number = layer;
+            number.ReplaceVariableWithLayer(variable, layer);
+        }
 
         public HashSet<char> GetVariables()
         {

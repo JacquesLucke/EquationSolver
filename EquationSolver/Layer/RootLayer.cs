@@ -32,6 +32,14 @@ namespace EquationSolver
         {
             return Math.Pow(baseOfRoot.Calculate(variableToNumberDictionary), 1 / nthRoot.Calculate(variableToNumberDictionary));
         }
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            if (baseOfRoot is VariableLayer && baseOfRoot.GetVariables().Contains(variable)) baseOfRoot = layer;
+            baseOfRoot.ReplaceVariableWithLayer(variable, layer);
+
+            if (nthRoot is VariableLayer && nthRoot.GetVariables().Contains(variable)) nthRoot = layer;
+            nthRoot.ReplaceVariableWithLayer(variable, layer);
+        }
 
         public HashSet<char> GetVariables()
         {

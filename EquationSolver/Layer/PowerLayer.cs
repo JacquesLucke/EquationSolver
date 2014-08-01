@@ -65,6 +65,14 @@ namespace EquationSolver
         {
             return Math.Pow(baseOfPower.Calculate(variableToNumberDictionary), exponent.Calculate(variableToNumberDictionary));
         }
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            if (baseOfPower is VariableLayer && baseOfPower.GetVariables().Contains(variable)) baseOfPower = layer;
+            baseOfPower.ReplaceVariableWithLayer(variable, layer);
+
+            if (exponent is VariableLayer && exponent.GetVariables().Contains(variable)) exponent = layer;
+            exponent.ReplaceVariableWithLayer(variable, layer);
+        }
 
         public override string ToString()
         {

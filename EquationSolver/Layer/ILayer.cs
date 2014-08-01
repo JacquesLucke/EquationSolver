@@ -14,5 +14,7 @@ namespace EquationSolver
         HashSet<char> GetVariables();
         void Simplify();
         void CalculateNonVariableLayers();
+
+        void ReplaceVariableWithLayer(char variable, ILayer layer);
     }
 }

@@ -30,6 +30,10 @@ namespace EquationSolver
             return value;
         }
 
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+        }
+
         public HashSet<char> GetVariables()
         {
             return new HashSet<char>();
