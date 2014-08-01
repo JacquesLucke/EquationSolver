@@ -17,6 +17,22 @@ namespace EquationSolver
             {
                 while (true)
                 {
+                    Equation e1 = Equation.FromString(GetInputString("Equation 1"));
+                    Equation e2 = Equation.FromString(GetInputString("Equation 2"));
+
+                    e1.RearrangeToVariable('x');
+                    e2.ReplaceVariableWithLayer('x', e1.Terms[1].TopLayer);
+                    e2.RearrangeToVariable('y');
+                    e1.ReplaceVariableWithLayer('y', e2.Terms[1].TopLayer);
+                    e1.RearrangeToVariable('x');
+
+                    Console.WriteLine("x = " + e1.Terms[1].ToString());
+                    Console.WriteLine("y = " + e2.Terms[1].ToString());
+                    Console.WriteLine();
+                }
+
+                while (true)
+                {
                     Equation equation = Equation.FromString(GetInputString("Equation"));
                     equation.RearrangeToVariable('x');
                     Console.WriteLine(equation);

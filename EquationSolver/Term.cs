@@ -177,6 +177,11 @@ namespace EquationSolver
             topLayer = powerLayer;
         }
 
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            topLayer.ReplaceVariableWithLayer(variable, layer);
+        }
+
 
         public override string ToString()
         {
