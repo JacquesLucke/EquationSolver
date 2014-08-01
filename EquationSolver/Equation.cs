@@ -98,6 +98,12 @@ namespace EquationSolver
                 terms[i].Power(exponent);
         }
 
+        public void ReplaceVariableWithLayer(char variable, ILayer layer)
+        {
+            for (int i = 0; i < 2; i++)
+                terms[i].ReplaceVariableWithLayer(variable, layer);
+        }
+
         public void RearrangeToVariable(char variable)
         {
             while (!IsReady(variable))
